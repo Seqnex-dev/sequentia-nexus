@@ -1,0 +1,41 @@
+Sequentia Nexus - beta terms
+
+Copyright (c) 2026 Seqnex. All rights reserved.
+
+Sequentia Nexus is in beta. These terms apply to the beta versions.
+
+1. Licence. The program runs with a personal licence key, free of charge,
+   given by Seqnex or obtained at https://sequentianexus.com/beta. A key works
+   on one PC at a time and is for your own use: do not share, sell or publish
+   it.
+
+2. What you may not do. Do not copy, share or publish the program's steps,
+   decompile, disassemble or modify the program, or try to get around the
+   licence check. The steps carry marks of the licence they were sent to.
+
+3. Revocation. Seqnex may revoke any beta licence at any time, in particular
+   at the end of the beta or when these terms are not respected. Abuse of the
+   beta page (for example many requests in a short time) bans the connection
+   for life and revokes at once every key it received.
+
+4. No warranty. The program is provided "as is", without any warranty. It is
+   beta software: keep copies of the videos you work on. Seqnex is not liable
+   for any loss of data or other damage arising from its use, to the extent
+   permitted by law.
+
+5. Data. To check the licence, the program sends to the licence server the
+   licence key, the program version and a code calculated from the PC (a
+   hash: it does not contain names, files or other data of the PC). The
+   server keeps the licence, the code of the PC it is active on and the dates
+   of activations and starts. If you get a key from the beta page, the server
+   also keeps, with the key, a code calculated from your IP address (not the
+   address itself), and a log of the page's requests for 30 days, to apply
+   the limits of the page. Nothing else about you or your videos leaves
+   your PC, except what you upload yourself with the "Upload to server" step,
+   to your own server.
+
+6. Third-party components. The program includes components under their own
+   licences (see THIRD-PARTY-NOTICES.txt and the licenses folder). FFmpeg,
+   MKVToolNix and Tesseract are separate programs that you install yourself.
+
+Using the program means accepting these terms.

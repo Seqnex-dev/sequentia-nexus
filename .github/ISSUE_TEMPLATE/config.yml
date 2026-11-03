@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Get a free beta key
+    url: https://sequentianexus.com/beta
+    about: License keys are not given in the issues. Get yours on the beta page.

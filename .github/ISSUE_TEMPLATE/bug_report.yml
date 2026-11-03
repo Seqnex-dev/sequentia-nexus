@@ -1,0 +1,40 @@
+name: Bug report
+description: Something does not work as it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing Sequentia Nexus! Issues are **public**: never write your license key here,
+        and remove from the log the address, port and user name of your server.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Help → About, or the name of the zip you downloaded.
+      placeholder: "0.37.0"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps of the workflow
+      description: The steps in the workflow list (or the name of the preset).
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Press "📋 Copy log" in the program and paste it here.
+      render: text
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 23H2"

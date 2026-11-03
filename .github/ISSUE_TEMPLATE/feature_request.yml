@@ -1,0 +1,16 @@
+name: Idea
+description: A feature or an improvement you would like
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What would you like the program to do, and why would it help you?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: A concrete case, for example the kind of videos or subtitles you work with.
