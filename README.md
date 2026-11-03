@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.39.0-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.40.0-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -28,7 +28,8 @@ steps you need from a catalog, set them up once, and the app runs them in the ri
 every video in a folder. The result is a clean MKV with the audio and subtitles you want.
 
 - **Extract** the best audio track and all subtitles in your language, sorted into
-  *forced*, *regular* and *SDH*.
+  *forced*, *regular* and *SDH*; optionally **more audio languages** too, for example the
+  original one next to the dubbed one, with their subtitles.
 - **Convert the audio**: keep it as it is or convert it (AC3, E-AC3, AAC, FLAC, DTS, Opus,
   MP3), with 5.1 / 7.1 upmix and an optional even loudness (EBU R128) for every episode.
   Several files are converted at the same time.

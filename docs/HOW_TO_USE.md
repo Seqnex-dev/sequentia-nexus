@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.39.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.40.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -280,6 +280,8 @@ language, and sorts the subtitles into three types:
 | Setting | |
 |---|---|
 | Audio language, Subtitle language | The languages to extract, for example `eng - English`. |
+| Extra audio languages | Empty by default. Other audio tracks to keep, after the main one: see [Extra languages](#extra-languages) below. |
+| Also the subtitles of these languages | Off by default. Also takes the subtitles of the extra languages. |
 | Extract forced / regular / SDH subtitles | Which subtitle types you want. The other subtitle steps follow these choices. |
 | Convert ASS/SSA subtitles to SRT | On by default: styled subtitles (ASS, SSA, and MP4 / WebVTT text) become plain SRT; italics and bold are kept, colours, position and fonts are lost. Off: ASS and SSA stay as they are, identical to the original, and reach the final file with their style and fonts (see [Fonts of ASS subtitles](#fonts-of-ass-subtitles); MP4 / WebVTT text still becomes SRT). The SRT steps (Correct SRT, Sync subtitles, Create missing subtitles) leave an ASS unchanged, and the rules preview says so. |
 | *Advanced*: SDH threshold, Forced: lines per minute | How a subtitle is recognised as SDH or forced when the video does not say it (see below). |
@@ -295,6 +297,27 @@ How the type is chosen, in this order:
 
 The log shows the type of each track and why, for example `Stream 5: regular (504 lines, 18.1
 per minute)`.
+
+##### Extra languages
+
+With **Extra audio languages** a final file can have more than one audio track, for example the
+dubbed one and the original language. Add the languages with *+ Add language...*; the special
+entry **Original language** takes, in each video, the track flagged as original in the file or,
+if no track has the flag, the first track in another language (files usually start with the
+original one). For each language the best track is taken, leaving out commentaries.
+
+- The main language stays the **first track and the one on by default**; the extra ones follow
+  in the order of the list, for example `Ita AC3 5.1`, `Jpn AC3 5.1`, `Eng AC3 5.1`.
+- A video without one of the languages comes out with the ones it has; the log says so
+  (`Extra audio: 'eng': no audio track in this language`).
+- *Convert audio* converts them like the main track, or copies them as they are (its option
+  **Extra tracks**). With *Encode video + mux* and the audio converted during the encode, each
+  video waits for all its tracks before the merge.
+- With **Also the subtitles of these languages** their forced / regular / SDH subtitles (as
+  ticked above) go into the file too, as they are, after the ones of the main language and never
+  on by default (`English forced`, `English regular`). The subtitle steps (Correct SRT, Create
+  missing subtitles, OCR) do not touch them; *Synchronize subtitles* does, like every subtitle of
+  the video. With the hardsub they are not muxed, like the other subtitles.
 
 **Video formats.** The input folder can hold `.mkv`, `.mp4`, `.avi` and `.mov` files; the
 final file is always an `.mkv` (`Film.mp4` becomes `Film.mkv`). Files in other video formats
@@ -357,6 +380,7 @@ has **Convert image subtitles to SRT**.
 | Output layout | 5.1 or 7.1. Stereo and mono tracks are upmixed. |
 | Bitrate | Default: the maximum of the codec (AC3 640k, E-AC3 1536k...). |
 | Samplerate | Default: 48000 Hz. |
+| Extra tracks | The tracks of the [extra languages](#extra-languages): **Like the main one** (default: the same codec, channels and bitrate, files every TV can play) or **Copied as they are** (original quality, e.g. DTS or TrueHD, bigger files, some TVs cannot play them). |
 | 5.1 surround layout | *5.1 side* (recommended) or *5.1 rear*. |
 | Run volume check on mono files | Measures the peak of mono tracks and lowers the volume when it goes over the threshold (default -2 dB), so the upmixed audio does not distort. |
 | No downmix for audio larger than requested layout | Off: a track with more channels than the codec supports is downmixed. On: the workflow stops instead. |
@@ -474,7 +498,8 @@ catalog when the other is already in the workflow replaces it, and the log says 
 #### Merge without re-encoding
 
 Puts the original video, the audio of the audio step and the subtitles into a new MKV, without
-re-encoding. The tracks get clear names, such as `Eng AC3 5.1` and `English forced`. If a type
+re-encoding. The tracks get clear names, such as `Eng AC3 5.1` and `English forced`; the
+[extra languages](#extra-languages) follow the main ones. If a type
 has both a text and an image subtitle, the text one is used. The attachments of the original
 (the fonts of its ASS subtitles, a cover) stay in the new file; for fonts the video lacks see
 [Fonts of ASS subtitles](#fonts-of-ass-subtitles).
