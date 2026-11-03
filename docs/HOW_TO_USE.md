@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.42.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.43.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -517,12 +517,16 @@ not converted again.
 | Setting | |
 |---|---|
 | Video codec | H.264 or H.265, on an NVIDIA GPU (**NVENC**, fast) or on the CPU (x264 / x265). The NVENC codecs are listed only if a card passed the NVENC test (see [GPU](#gpu)). |
-| Video bitrate | **Required**: there is no default, you have to enter it (for example `4000` = 4000 kbit/s). Not needed with NVENC in *VBR constant quality (CQ)*. |
-| Not above the original bitrate | Off by default. When the original video has a lower bitrate than the chosen one, the encode uses the original one: a video downloaded from the web at 1100 kbit/s encoded at 2600k only becomes twice as big, with no gain in quality. The log says which bitrate is used, for example `Original video at 1135 kbit/s, below 2600k: 1135k is used`. With an H.265 original the same bitrate in H.264 is a little less sharp. Not used with CQ. |
+| Quality control | x264 / x265 only: **Bitrate** (default, predictable size) or **Constant quality (CRF)**. See [Resolution and quality](#resolution-and-quality) below. |
+| CRF | With *Constant quality (CRF)*: **Automatic** (default, by the resolution that comes out) or a value from 14 to 30. |
+| Video bitrate | **Required**: there is no default, you have to enter it (for example `4000` = 4000 kbit/s). Not needed with NVENC in *VBR constant quality (CQ)*, or with x264 / x265 in *Constant quality (CRF)*. |
+| Not above the original bitrate | Off by default. When the original video has a lower bitrate than the chosen one, the encode uses the original one: a video downloaded from the web at 1100 kbit/s encoded at 2600k only becomes twice as big, with no gain in quality. The log says which bitrate is used, for example `Original video at 1135 kbit/s, below 2600k: 1135k is used`. With an H.265 original the same bitrate in H.264 is a little less sharp. Not used with CQ or CRF. |
+| Two passes | x264 / x265 with a bitrate: **on** by default. See below. |
 | NVENC preset / CPU preset | Speed against quality. |
 | Bit depth | 8 or 10 bit. |
 | Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, noise](#picture-deinterlace-black-bars-noise) below. |
 | Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
+| Maximum resolution | **Same as source** (default), 2160p, 1440p, 1080p, 720p, 576p or 480p. See below. |
 | Noise reduction | Off (default), Light, Medium or Strong (see below). |
 | HDR | **Automatic** (default) or Always convert to SDR. See [HDR videos](#hdr-videos) below. |
 | Preview | **Encode preview...**: encodes a piece of a video with these settings and tells size, time and quality. See [Encode preview](#encode-preview) below. |
@@ -578,6 +582,29 @@ over the film) and prepares the picture. The log says what it found for every vi
 
 These options exist only in *Encode video + mux*: *Merge without re-encoding* does not touch the
 picture.
+
+##### Resolution and quality
+
+- **Maximum resolution** shrinks the videos bigger than the limit, keeping their shape, after the
+  black bars crop: with *1080p* a 4K film of 3840x1600 becomes 1920x800
+  (`Resolution: 3840x1600 -> 1920x800 (limit 1080p)`). A smaller video is never enlarged
+  (`Resolution: 720x576, within 1080p: kept`). A DVD, whose pixels are wide, comes out with square
+  pixels when it is shrunk (720x576 at 480p becomes 854x480). With an NVIDIA card, when nothing
+  else changes the picture (no deinterlace, crop, tone mapping, noise reduction or hardsub), the
+  card decodes, resizes and encodes without the frames ever leaving it (`Resize on the video
+  card`): faster, and the CPU stays free for the audio. A burned image subtitle follows the new
+  size.
+- **Constant quality (CRF)**, for x264 and x265: every scene gets the bits it needs for the same
+  quality, so easy scenes cost little and hard ones more; the size is not known in advance (the
+  [Encode preview](#encode-preview) estimates it). *Automatic* uses the values of HandBrake's
+  presets by the resolution that comes out (after the crop and the maximum resolution): x264 20 up
+  to 1080p and 22 above, x265 22 and 24: `Quality: CRF 20 (automatic for 800 lines)`. Lower
+  values give more quality and bigger files (every 6 points the size roughly doubles or halves).
+- **Two passes**, for x264 and x265 with a bitrate (on by default): a first fast pass looks at the
+  whole video, the second one encodes it giving more bits to the hard scenes; at the same size
+  the quality is better and the final bitrate is the chosen one (in our tests 1912 kbit/s for
+  2000 chosen, 2293 with one pass). The encode takes about 30-50% longer. The log says
+  `Two passes (the first one fast)` and `First pass done: ...`.
 
 ##### HDR videos
 
