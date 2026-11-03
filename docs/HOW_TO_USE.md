@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.38.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.39.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -496,6 +496,9 @@ not converted again.
 | Not above the original bitrate | Off by default. When the original video has a lower bitrate than the chosen one, the encode uses the original one: a video downloaded from the web at 1100 kbit/s encoded at 2600k only becomes twice as big, with no gain in quality. The log says which bitrate is used, for example `Original video at 1135 kbit/s, below 2600k: 1135k is used`. With an H.265 original the same bitrate in H.264 is a little less sharp. Not used with CQ. |
 | NVENC preset / CPU preset | Speed against quality. |
 | Bit depth | 8 or 10 bit. |
+| Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, noise](#picture-deinterlace-black-bars-noise) below. |
+| Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
+| Noise reduction | Off (default), Light, Medium or Strong (see below). |
 | Include forced / regular / SDH subtitles | Which subtitles go into the final file (hidden with the hardsub). |
 | Burn subtitles into the video (hardsub) | Off by default. See [Hardsub](#hardsub) below. |
 | Subtitle to burn | Forced, regular or SDH: only the types enabled in *Extract audio and subtitles*. |
@@ -516,6 +519,37 @@ that disconnects for a moment), the encoded video is kept and the merge is tried
 disconnected?): trying again in 15 s`. The same happens when *Merge* moves the final files.
 
 The attachments of the original (fonts, cover) are kept in the final file, as with *Merge*.
+
+##### Picture: deinterlace, black bars, noise
+
+Before encoding a video the step looks at six short pieces of it (a few seconds in all, spread
+over the film) and prepares the picture. The log says what it found for every video.
+
+- **Deinterlace** (Automatic by default). DVDs and TV recordings are often *interlaced*: encoded
+  as they are, horizontal lines appear in the movement. With *Automatic*:
+  - a **progressive** video (almost every Blu-ray and modern file, and most films on PAL DVD,
+    even when the DVD says "interlaced") is left as it is:
+    `Deinterlace: not needed (progressive, 0% combed frames)`;
+  - an **interlaced** video gets only its combed frames fixed, the others stay intact (like
+    HandBrake's *Decomb*): `Deinterlace: interlaced (TFF, 100% combed frames)`;
+  - an **NTSC film with telecine** (3:2 pulldown, 29.97 fps) gets its original film frames back,
+    at 23.976 fps: `Deinterlace: telecine (NTSC film, 40% repeated fields)`.
+
+  *Always* deinterlaces every frame; *Off* never touches the picture.
+- **Crop the black bars** (off by default). Removes the black bars above and below, or at the
+  sides: the file is smaller and the encode faster at the same quality, but the size changes, for
+  example `Black bars: 1920x1080 -> 1920x800`. Only what is black in **every** piece checked is
+  removed, so a dark scene never loses picture; if the cut would remove more than half of the
+  picture (a very dark video), nothing is cut. With the hardsub of an **image** subtitle
+  (Blu-ray, DVD) the bars are kept, because those subtitles may sit in them; a burned SRT or ASS
+  is drawn inside the cropped picture.
+- **Noise reduction** (off by default): removes the grain and noise of old videos (DVD, VHS), so
+  the bits go to the picture, not to the noise. *Light* for good DVDs, *Medium* for grainy ones,
+  *Strong* only for badly damaged sources, because it also removes fine detail. The same levels
+  as HandBrake; the CPU does it, so the encode is a little slower.
+
+These options exist only in *Encode video + mux*: *Merge without re-encoding* does not touch the
+picture.
 
 ##### Hardsub
 

@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.38.1-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.39.0-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -40,6 +40,8 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
 - **Merge** everything into an MKV, or **encode** the video (NVIDIA NVENC or CPU,
   H.264 / H.265). With two NVIDIA cards, two videos are encoded at the same time, and the
   CPU converts the audio while the cards encode.
+- **Clean up the picture** before the encode: automatic deinterlacing (only when the video
+  needs it, also NTSC telecine), black bars cropped, noise reduction for old DVDs.
 - **Burn subtitles into the video** (hardsub): SRT with a Blu-ray-like style, ASS with its own
   style and fonts, Blu-ray and DVD image subtitles as they are. The fonts of ASS subtitles
   stay in the final file; an episode that lacks one borrows it from the other episodes.
