@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.41.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.42.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -524,6 +524,7 @@ not converted again.
 | Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, noise](#picture-deinterlace-black-bars-noise) below. |
 | Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
 | Noise reduction | Off (default), Light, Medium or Strong (see below). |
+| HDR | **Automatic** (default) or Always convert to SDR. See [HDR videos](#hdr-videos) below. |
 | Preview | **Encode preview...**: encodes a piece of a video with these settings and tells size, time and quality. See [Encode preview](#encode-preview) below. |
 | Include forced / regular / SDH subtitles | Which subtitles go into the final file (hidden with the hardsub). |
 | Burn subtitles into the video (hardsub) | Off by default. See [Hardsub](#hardsub) below. |
@@ -537,7 +538,8 @@ in **Preferences → GPU**. There you also find two options, on by default, that
 workflow faster: the card also decodes the video, and *Convert audio* works while the cards
 encode (see [GPU](#gpu)).
 
-A source in 10 bit encoded with H.264 is turned into 8 bit (NVENC H.264 has no 10 bit).
+A source in 10 bit encoded with H.264 is turned into 8 bit (NVENC H.264 has no 10 bit); an HDR
+source is also converted to SDR (see [HDR videos](#hdr-videos)).
 
 If the output folder cannot be written when a video is merged (a USB disk or a network drive
 that disconnects for a moment), the encoded video is kept and the merge is tried again after
@@ -576,6 +578,30 @@ over the film) and prepares the picture. The log says what it found for every vi
 
 These options exist only in *Encode video + mux*: *Merge without re-encoding* does not touch the
 picture.
+
+##### HDR videos
+
+4K films are often **HDR** (HDR10, HDR10+, HLG, Dolby Vision): brighter highlights and wider
+colours, shown properly only by an HDR TV. The step recognises them by itself (normal SDR videos
+do not change) and, with **HDR** on *Automatic*:
+
+- in **H.265 at 10 bit** the HDR is **kept** as it is, with its brightness data (mastering
+  display, MaxCLL), as HandBrake does: `HDR: HDR10, kept (H.265 10 bit)`. HDR10+ and Dolby
+  Vision (profiles 7 and 8) are kept as HDR10, their extra layer is not; Dolby Vision profile 5,
+  which has no HDR10 picture, is made HDR10;
+- in **H.264**, or H.265 at **8 bit**, HDR cannot be kept: the video is **converted to SDR**
+  (tone mapping), with natural colours and highlights, instead of the pale, grey picture an HDR
+  video gives when it is just re-encoded: `HDR: HDR10, converted to SDR (H.264 cannot keep HDR)`.
+
+*Always convert to SDR* converts in H.265 10 bit too, for a file that looks right on every
+screen (a PC monitor, an old TV, a phone). The conversion runs on the video card (Vulkan, fast);
+where it cannot, on the CPU, slower: the log says `Tone mapping on the video card failed (no
+Vulkan?): done again on the CPU (slower)`.
+
+A subtitle **burned** into a video that stays HDR (SRT or image subtitles) is made darker, at the
+brightness of the white of the scene: at full white it would dazzle on an HDR TV. An ASS keeps its
+own colours. In the [Encode preview](#encode-preview) the result has an **HDR** line, and the
+frames to compare are shown converted for your screen.
 
 ##### Encode preview
 
