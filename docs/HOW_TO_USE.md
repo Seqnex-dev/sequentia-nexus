@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.44.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.45.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -85,7 +85,8 @@ The menus:
   Light, System). The program starts in English: the language is chosen in
   **Preferences → Language**. That page always says "Language" in English too, so it can be
   found even in a language you cannot read.
-- **Help**: *About*.
+- **Help**: *Documentation* (opens this guide), *Check for updates...* (see
+  [Updates](#updates)), *About*.
 
 ![Light theme](images/main_light.png)
 
@@ -1057,6 +1058,24 @@ on the video card is not affected.
 
 The page also reminds that while a workflow runs Windows does not go to sleep by itself: to put
 the PC to sleep, hibernate it or shut it down at the end, use **When done** next to the progress bar.
+
+### Updates
+
+When the program starts it looks for a newer version on sequentianexus.com (**Check for updates
+when the program starts**, on by default): at most once every 6 hours, and only the version number
+is read, nothing about you is sent. When there is one, a window tells the new version, the size of
+the download and has a link to **what's new**:
+
+- **Download** downloads the zip into your **Downloads** folder, with a progress bar (the same button
+  cancels); then **Show the file** opens the folder. To update, close the program and unpack the zip
+  in place of the old folder: your settings, presets, queue and licence are in your data folder
+  (see [Where your data is stored](#11-where-your-data-is-stored)), so they stay.
+- **Later** asks again at a later start; **Skip this version** does not tell you about that version
+  any more (a newer one is announced again).
+
+Nothing is ever installed by itself. A check that finds a new version while a workflow or the
+queue runs waits for the end of the work. **Check now** on this page, or *Help → Check for
+updates...*, checks at once (also for a skipped version).
 
 ### License
 
