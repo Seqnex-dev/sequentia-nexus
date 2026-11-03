@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.45.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.46.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -80,12 +80,18 @@ A program installed here is found right away: you don't need to restart the app.
 
 The menus:
 
-- **File**: *New workflow*, *Open preset...*, *Save preset as...*, *Delete preset...*, *Exit*.
+- **File**: *New workflow*, *Open preset...*, *Save preset as...*, *Delete preset...*,
+  *Queue...*, *Exit*.
 - **Settings**: *Preferences...* (also **Ctrl+,**), *System Requirements...*, *Theme* (Dark,
-  Light, System). The program starts in English: the language is chosen in
-  **Preferences → Language**. That page always says "Language" in English too, so it can be
-  found even in a language you cannot read.
-- **Help**: *Documentation* (opens this guide), *Check for updates...* (see
+  Light, System). The program starts in the language of Windows (English when it is not one of
+  its languages); the language is chosen in **Preferences → Language**. That page always says
+  "Language" in English too, so it can be found even in a language you cannot read.
+- **Help**: *Documentation* (also **F1**) opens this guide in a window of its own, in the
+  language of the program: the chapters on the left (they open on their sections), the text on the
+  right, a search field on top, and the usual buttons to make it full screen. The guide is kept up
+  to date from sequentianexus.com (also when there is no new version of the program) and works
+  offline too. The same guide is on the site, at
+  [sequentianexus.com/guide](https://sequentianexus.com/guide/). *Check for updates...* (see
   [Updates](#updates)), *About*.
 
 ![Light theme](images/main_light.png)
@@ -1153,6 +1159,8 @@ On Windows, in `%APPDATA%\SequentiaNexus\`:
 | `requirements.json` | The last requirements check |
 | `license.json` | The license activated on this PC (the activation is protected by Windows) |
 | `steps\` | The steps received from the license server, encrypted |
+| `queue.json` | The queue of jobs |
+| `guide\` | The user guide downloaded from the site |
 
 Deleting the app folder does not remove this folder: delete it by hand if you want a clean
 start.

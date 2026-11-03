@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.45.0-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.46.0-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -66,6 +66,9 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   (nothing installs by itself).
 - **Queue**: several workflows, each with its own folders, run one after the other; all the
   checks are done at the start, then it runs unattended, every job with its own log.
+- **Guide in 11 languages**, inside the program (Help → Documentation, F1: chapters, search,
+  always up to date from the site) and at
+  **[sequentianexus.com/guide](https://sequentianexus.com/guide/)**.
 - **Presets**, a check before every run, a live log, a progress bar that moves while
   each file is worked on, a workflow list where every working step shows a turning arrow and
   each finished step a ✓ or ✗ (for movies and TV series separately), an optional notification on screen or on Telegram when the work is
@@ -123,7 +126,8 @@ inside the program are listed, with their licenses, in `THIRD-PARTY-NOTICES.txt`
 During the beta the program is free: get your personal key at
 **[sequentianexus.com/beta](https://sequentianexus.com/beta)**.
 
-The full guide is in **[docs/HOW_TO_USE.md](docs/HOW_TO_USE.md)**.
+The full guide is in **[docs/HOW_TO_USE.md](docs/HOW_TO_USE.md)**, and in 11 languages at
+**[sequentianexus.com/guide](https://sequentianexus.com/guide/)**.
 
 ## Feedback
 
