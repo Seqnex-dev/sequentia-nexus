@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.37.2**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.38.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -34,6 +34,9 @@ This guide covers version **0.37.2**. Sequentia Nexus is in beta: some parts may
 
 To update, unpack the new version in place of the old one: your preferences, presets and
 license stay where they are (see [Where your data is stored](#11-where-your-data-is-stored)).
+
+Only one Sequentia Nexus window can be open at a time: starting the program again brings the
+open window to the front (also when it is minimised).
 
 ### System Requirements window
 
@@ -72,7 +75,7 @@ A program installed here is found right away: you don't need to restart the app.
 | **Workflow** (centre) | The steps of your workflow, in the order they will run. |
 | **Parameters** (right) | The settings of the step selected in the workflow. |
 | **Log** (bottom) | What the app is doing, live. **📋 Copy log** copies it all. |
-| **▶ Start workflow / ■ Stop** | Start and stop the run. The bar next to them shows the progress. |
+| **▶ Start workflow / ❚❚ Pause / ■ Stop** | Start, pause and stop the run. The bar next to them shows the progress; **When done** on the right puts the PC to sleep or shuts it down at the end (see [Run a workflow](#5-run-a-workflow)). |
 
 The menus:
 
@@ -170,7 +173,7 @@ While it runs:
 
 - **Nothing can be changed**: the catalog, the workflow list, the parameters (shown in grey),
   the presets and the Preferences are locked, so it is clear that the run uses the settings it
-  started with. The log, the theme, About and **Stop** stay usable.
+  started with. The log, the theme, About, **Pause**, **Stop** and **When done** stay usable.
 - The **workflow list follows the run**: no row is highlighted; every step that is working
   right now shows a **blue arrow that turns** on its right, also two at once (for example the
   audio converted during the encode, or the movies uploaded while the TV series are processed).
@@ -192,8 +195,14 @@ While it runs:
 - The **progress bar** follows the step that is running, from 0 to 100%, and moves while each
   file is being worked on: the steps report how far the conversion, the encode, the merge or the
   OCR has got. The text inside the bar gives the step and the whole workflow, for example
-  `Encode video + mux 45% · total 69%`. When the workflow ends the bar shows the whole (100%). A pass
-  with nothing to do (Movies or TV Series with an empty input folder) does not count.
+  `Encode video + mux 45% · total 69%`. During an encode it also gives the speed, in frames per
+  second (added up with two video cards), and for every step the **time left** of that step,
+  worked out from how fast it is going: `Encode video + mux 45% · total 69% · 245 fps · 12 min left`.
+  The time left appears after the first seconds of a step and is the time of the step, not of the
+  whole workflow (every step goes at its own speed). When the workflow ends the bar shows the whole
+  (100%). A pass with nothing to do (Movies or TV Series with an empty input folder) does not count.
+- While a workflow runs, **Windows does not go to sleep by itself**, even if it is set to sleep
+  after some minutes without mouse or keyboard (the screen can still turn off).
 - The **last line of the log** shows the step that is running, with moving dots:
   `Convert audio in progress...`. When the step ends it becomes `✓ Convert audio completed (2 min 30 s)`,
   or `✗ ... failed` if something went wrong. *Encode video + mux* has two lines, one for each
@@ -219,6 +228,24 @@ uploaded. To redo only the missing ones, set *Existing files behavior* to **Skip
 video* and start the workflow again.
 
 **■ Stop** interrupts the current step and deletes the temporary files.
+
+**❚❚ Pause** freezes the workflow: the programs that are working (the step, FFmpeg, MKVToolNix,
+Tesseract, also the audio converted in the background and the uploads) stop where they are and
+use no CPU, and no new step starts. **▶ Resume** goes on from the same point, without losing
+anything; the bar says *Paused* in the meantime. The log notes both (`Workflow resumed after 5 min
+of pause`), and the time of the pause does not count in the times of the steps and in the summary.
+An upload to the NAS paused for a long time may lose its connection: at the resume it starts again
+from where it was (the `.part` file), as after any dropped connection.
+
+**When done** (on the right of the progress bar): **Do nothing**, **Sleep** or **Shut down**. It can
+be changed also while the workflow runs, for example when you decide to go to bed during a long
+encode. At the end a window counts down 60 seconds, with **Cancel** and *Sleep now* / *Shut down
+now*; the log is saved and the notifications are sent before. Nothing happens if you pressed
+**Stop** (you are there). The choice is used once, and every time the program opens it starts from
+*Do nothing*, so the PC never shuts down by surprise. If the workflow **ended with errors**, its log
+is saved in the log folder anyway (also with *Preferences → Log* off) and, when you come back (the
+PC wakes up, or the next time the program opens), a message tells you and the log of that workflow
+is shown again in the log panel.
 
 A step you switched off in the workflow is skipped: the next steps use the files of the last
 step before it.
@@ -840,6 +867,17 @@ second.
 **Disks.** Before every run the app checks the kind of disk of the work folder. If it is a USB
 disk, a mechanical disk or a network folder, a note in the log says that the steps that copy
 files (extraction, merge) will be slower. It is only a note: nothing is blocked.
+
+### Performance
+
+**Priority of the workflow**: **Low (recommended)** or **Normal**. With Low, when the PC is free
+the workflow is just as fast; when you use the PC at the same time (browser, videos, games) Windows
+gives it the precedence, so it stays responsive and the workflow slows down only a little. It
+applies to the steps and to the programs they start (FFmpeg, MKVToolNix, Tesseract); the encode
+on the video card is not affected.
+
+The page also reminds that while a workflow runs Windows does not go to sleep by itself: to put
+the PC to sleep or shut it down at the end, use **When done** next to the progress bar.
 
 ### License
 

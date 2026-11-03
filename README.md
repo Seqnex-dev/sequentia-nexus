@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.37.2-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.38.1-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -49,6 +49,8 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   once, and each file as soon as it is ready, while the others are still encoding.
 - **Movies and TV series** can have separate folders and separate settings: one workflow,
   two passes.
+- **Pause and resume** a run, see the **time left** and the encode speed, put the PC to
+  **sleep or shut it down when done**; the workflow runs at low priority, so the PC stays usable.
 - **Presets**, a check before every run, a live log, a progress bar that moves while
   each file is worked on, a workflow list where every working step shows a turning arrow and
   each finished step a ✓ or ✗ (for movies and TV series separately), an optional notification on screen or on Telegram when the work is
