@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.40.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.41.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -524,6 +524,7 @@ not converted again.
 | Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, noise](#picture-deinterlace-black-bars-noise) below. |
 | Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
 | Noise reduction | Off (default), Light, Medium or Strong (see below). |
+| Preview | **Encode preview...**: encodes a piece of a video with these settings and tells size, time and quality. See [Encode preview](#encode-preview) below. |
 | Include forced / regular / SDH subtitles | Which subtitles go into the final file (hidden with the hardsub). |
 | Burn subtitles into the video (hardsub) | Off by default. See [Hardsub](#hardsub) below. |
 | Subtitle to burn | Forced, regular or SDH: only the types enabled in *Extract audio and subtitles*. |
@@ -575,6 +576,30 @@ over the film) and prepares the picture. The log says what it found for every vi
 
 These options exist only in *Encode video + mux*: *Merge without re-encoding* does not touch the
 picture.
+
+##### Encode preview
+
+**Encode preview...** (in the parameters of the step) encodes a piece of a video with the
+settings of the step, to choose the bitrate before starting a whole series:
+
+- choose the **video** (from the input folder; with movies and TV series apart, from the folder
+  of that section), the **start** (*Automatic*: the middle of the video, where there is usually
+  action and not the titles; or a time) and the **length** (10, 30 or 60 seconds);
+- **Create preview** encodes the piece with the same codec, bitrate, video card, deinterlace,
+  black bars and noise reduction of the step (video only: the hardsub and the audio are not in
+  the preview);
+- the result tells the **size of the whole video** (video only), the **speed** of the encode and
+  the **time** for the whole video, the picture size when the black bars are cropped and, with
+  *Measure the quality*, the **VMAF** score: it compares the encode with the original as the eye
+  would; from 95 the two cannot be told apart, 90 is very good, 80 good, under 70 the bitrate is
+  too low. VMAF needs an FFmpeg built with it (the one installed by the System Requirements
+  window has it);
+- **Open preview** plays the piece in your video player; **Compare a frame** shows the same
+  frame of the original and of the encode at real size (zoom 100-300%): the button or the space
+  bar switches between them, so the differences in faces, dark areas and grain show.
+
+The estimates come from the piece: an action scene needs more bits than a dialogue, so try a
+busy part of the film. The preview files are deleted when the window closes.
 
 ##### Hardsub
 
