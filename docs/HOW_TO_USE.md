@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.43.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.44.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -75,7 +75,8 @@ A program installed here is found right away: you don't need to restart the app.
 | **Workflow** (centre) | The steps of your workflow, in the order they will run. |
 | **Parameters** (right) | The settings of the step selected in the workflow. |
 | **Log** (bottom) | What the app is doing, live. **📋 Copy log** copies it all. |
-| **▶ Start workflow / ❚❚ Pause / ■ Stop** | Start, pause and stop the run. The bar next to them shows the progress; **When done** on the right puts the PC to sleep or shuts it down at the end (see [Run a workflow](#5-run-a-workflow)). |
+| **▶ Start workflow / ❚❚ Pause / ■ Stop** | Start, pause and stop the run. The bar next to them shows the progress; **When done** on the right puts the PC to sleep, hibernates it or shuts it down at the end (see [Run a workflow](#5-run-a-workflow)). |
+| **Queue** | Adds the current workflow to the queue, or shows the queue: several workflows with their own folders, run one after the other (see [The queue](#the-queue)). |
 
 The menus:
 
@@ -237,10 +238,12 @@ of pause`), and the time of the pause does not count in the times of the steps a
 An upload to the NAS paused for a long time may lose its connection: at the resume it starts again
 from where it was (the `.part` file), as after any dropped connection.
 
-**When done** (on the right of the progress bar): **Do nothing**, **Sleep** or **Shut down**. It can
-be changed also while the workflow runs, for example when you decide to go to bed during a long
-encode. At the end a window counts down 60 seconds, with **Cancel** and *Sleep now* / *Shut down
-now*; the log is saved and the notifications are sent before. Nothing happens if you pressed
+**When done** (on the right of the progress bar): **Do nothing**, **Sleep**, **Hibernate** or
+**Shut down**. It can be changed also while the workflow runs, for example when you decide to go to
+bed during a long encode. *Hibernate* saves everything to disk and uses no power, then the PC
+starts again where it was (if Windows has hibernation off, the log says so: `powercfg /h on` turns
+it on). At the end a window counts down 60 seconds, with **Cancel** and *Sleep now* / *Hibernate
+now* / *Shut down now*; the log is saved and the notifications are sent before. Nothing happens if you pressed
 **Stop** (you are there). The choice is used once, and every time the program opens it starts from
 *Do nothing*, so the PC never shuts down by surprise. If the workflow **ended with errors**, its log
 is saved in the log folder anyway (also with *Preferences → Log* off) and, when you come back (the
@@ -249,6 +252,45 @@ is shown again in the log panel.
 
 A step you switched off in the workflow is skipped: the next steps use the files of the last
 step before it.
+
+### The queue
+
+The **queue** runs several workflows one after the other, each with **its own folders**: for
+example a TV series in one folder with one preset, then a film in another folder with another
+preset, started in the evening with *When done → Shut down*.
+
+- **Queue → Add current workflow** (the button next to **Stop**) adds the workflow shown now,
+  with its steps, parameters and file choices, and the folders of *Preferences → Folders* at that
+  moment (folder mode, input, work and output). Change the folders or the preset and add the next
+  job: every job keeps its own.
+- **Queue → Show queue...** (also *File → Queue...*, `Ctrl+Shift+Q`) opens the queue window: the
+  jobs in order, their input folders (the whole paths in the tooltip), their state (*Waiting*,
+  *Running*, ✓ *Done*, ✗ *With errors*, ■ *Stopped*, – *Skipped*) and their result
+  (`2 videos processed in 00:12:40`).
+  - **Drag** a job to change the order.
+  - **Folders...** (or a double click) changes the folders of that job only.
+  - **Load into workflow** shows a job in the workflow panel: change its steps or parameters, then
+    **Use current workflow** puts them back in the job (its folders stay).
+  - **Run again** puts a finished job back to waiting; **Open log** shows the log of a finished
+    job; **Remove** and **Remove finished** clean the list.
+  - **Save queue...** / **Open queue...**: a queue file (`.snxqueue`) to keep or move to another
+    PC; opening one adds its jobs at the end.
+- **▶ Start queue**: first the **checks of every waiting job**, one after the other, with the
+  usual pre-flight window for each job (its name in the title): all the questions (warnings,
+  tracks without a language) are asked now, so the queue can then run unattended. A job that does
+  not pass the checks, or that you cancel, is *Skipped*. Then the jobs run one at a time: the
+  workflow panel shows the running job, the log shows its log.
+- A job that ends **with errors** is marked ✗ and the queue goes on with the next one. Every job
+  keeps its own log in the log folder (also with *Preferences → Log* off). **Stop** stops the whole
+  queue: the jobs not started yet stay *Waiting*. **Pause** pauses the running job.
+- At the end the last line of the log sums up the queue
+  (`Queue finished: 3 jobs done, 1 with errors, in 02:10:00`); the notifications and **When done**
+  come once, for the whole queue.
+- The queue is kept when the program closes; a job that was running then is *Waiting* again.
+  Jobs added while the queue runs wait for the next start of the queue.
+
+One job at a time is on purpose: a job already uses every video card (an encode on two cards) and
+the CPU (audio converted in parallel), and two jobs together would only slow each other down.
 
 ### Where the files end up
 
@@ -1014,7 +1056,7 @@ applies to the steps and to the programs they start (FFmpeg, MKVToolNix, Tessera
 on the video card is not affected.
 
 The page also reminds that while a workflow runs Windows does not go to sleep by itself: to put
-the PC to sleep or shut it down at the end, use **When done** next to the progress bar.
+the PC to sleep, hibernate it or shut it down at the end, use **When done** next to the progress bar.
 
 ### License
 
