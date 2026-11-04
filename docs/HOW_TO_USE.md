@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.46.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.48.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -106,7 +106,7 @@ Open **Settings → Preferences... → Folders** before the first run.
 
 | Folder | What goes there |
 |---|---|
-| **Original input folder** | The videos to process (`.mkv`, `.mp4`, `.avi`, `.mov`). |
+| **Original input folder** | The videos to process (`.mkv`, `.mp4`, `.avi`, `.mov`). DVDs and Blu-rays too: `.iso` files and `VIDEO_TS` / `BDMV` folders (see [Read DVD and Blu-ray](#read-dvd-and-blu-ray)). The button with the disc chooses a drive of the PC: the disc in it is read. |
 | **Work folder** | Temporary files while the workflow runs. Leave it empty to use the default folder inside the app (`work`). It is cleaned at the end. |
 | **Output folder** | The finished files. Tick *Use work folder as output* to keep them in the work folder instead. |
 
@@ -163,6 +163,8 @@ them in any order.
 | Re-encode the video too | use **Encode video + mux** instead of **Merge without re-encoding** |
 | Only get the audio and subtitles out of the videos | Extract audio and subtitles (alone) |
 | Fix the aspect ratio of finished files | add **Aspect ratio** at the end, or use it alone |
+| Turn DVDs and Blu-rays into MKV files | Read DVD and Blu-ray (alone) |
+| Same, then convert the audio and clean the subtitles | **Read DVD and Blu-ray** before the other steps |
 
 ---
 
@@ -317,6 +319,51 @@ You can also have the original videos deleted after a successful run: see
 
 ### Extraction
 
+#### Read DVD and Blu-ray
+
+Reads the DVDs and Blu-rays of the input folder and turns each title you choose into an MKV
+file, **without re-encoding**: the video, all the audio and subtitle tracks with their languages,
+and the chapters. The next steps then work on these MKV files like on any other video; used
+alone, the MKV files are the final files.
+
+Where the discs can be:
+
+- `.iso` files in the input folder (Windows opens them as a drive while they are read; nothing
+  is changed);
+- folders with a copied disc in the input folder (`VIDEO_TS` for a DVD, `BDMV` for a Blu-ray);
+- the disc in a drive of the PC: in **Preferences → Folders** press the button with the disc next
+  to the input folder and choose the drive.
+
+With other steps the other videos of the folder are processed together with the discs; used alone, the step reads only the discs.
+
+**Which titles.** Before the start the step reads the structure of every disc (a few seconds:
+nothing is copied yet) and the check window shows the box **DVD and Blu-ray** with every title
+long enough: number, length, chapters, audio and subtitle languages. Ticked, as a proposal:
+
+- a film: the main title; trailers, extras, menus and copies of the same title are left out;
+- a series (several titles of an episode's length, or the *TV series* pass with separate
+  folders): the episodes, in the order of the disc, without the "play all" title.
+
+Tick or untick the titles and change their names as you like.
+
+**Names.** A film gets the name of the `.iso`, folder or disc. For a series, when the name of the
+disc says the season (`Friends S02 Disc 1`, `Friends Season 2 D1`), the episodes get
+`Friends - S02E01 - The One With Ross's New Girlfriend`, numbered on from the earlier discs of
+the same season (Disc 1, Disc 2...). The episode titles come from **TVmaze**, a free online
+database of TV series (only the name of the series is sent); when the series is not found, or
+there is no internet, the name stays `Friends - S02E01`. If the lengths on the disc do not match
+the episodes on TVmaze (another order, a double episode), the check says so.
+
+A 16:9 DVD keeps each subtitle in several versions (wide, letterbox): only the one that fits the
+picture is kept, so the next steps do not see each subtitle twice.
+
+A Blu-ray 3D gives the film in 2D: its second eye is left out, without re-encoding.
+
+**Protected discs.** Sequentia Nexus reads only discs without protection: copies that have none, home-made discs. A protected disc (most commercial DVDs and Blu-rays: CSS, AACS) is recognised from its data before the start and skipped.
+
+With *Delete originals* an `.iso` or a disc folder is removed only when every chosen title has
+its final file; a drive is never touched.
+
 #### Extract audio and subtitles
 
 Finds the best audio track in the chosen language and all the subtitles in the chosen
@@ -372,7 +419,7 @@ original one). For each language the best track is taken, leaving out commentari
 final file is always an `.mkv` (`Film.mp4` becomes `Film.mkv`). Files in other video formats
 (`.ts`, `.webm`, `.wmv`...) are skipped, and the check before the start lists them. Two files
 with the same name and different extensions (`Film.mp4` and `Film.mkv`) would give the same
-final file: the check before the start stops and asks to rename one.
+final file: the check before the start stops and asks to rename one. `.iso` files and folders with a copied disc are read by the step [Read DVD and Blu-ray](#read-dvd-and-blu-ray); without it the check before the start lists them and they are ignored.
 
 **Tracks without a language.** Many AVI and MP4 files do not say the language of their
 tracks. When a video has no track in the chosen language but has tracks without a language:
@@ -574,6 +621,7 @@ not converted again.
 | NVENC preset / CPU preset | Speed against quality. |
 | Bit depth | 8 or 10 bit. |
 | Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, noise](#picture-deinterlace-black-bars-noise) below. |
+| 3D → 2D | **Automatic** (default), Off, or always side by side / top and bottom: a 3D video becomes 2D. See [Picture](#picture-deinterlace-black-bars-noise). |
 | Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
 | Maximum resolution | **Same as source** (default), 2160p, 1440p, 1080p, 720p, 576p or 480p. See below. |
 | Noise reduction | Off (default), Light, Medium or Strong (see below). |
@@ -628,6 +676,14 @@ over the film) and prepares the picture. The log says what it found for every vi
   the bits go to the picture, not to the noise. *Light* for good DVDs, *Medium* for grainy ones,
   *Strong* only for badly damaged sources, because it also removes fine detail. The same levels
   as HandBrake; the CPU does it, so the encode is a little slower.
+- **3D → 2D** (Automatic by default). A 3D video has the two eyes side by side (SBS) or one
+  above the other (top and bottom, TAB / OU): on a normal TV it looks double. The step
+  recognises it from the 3D flag of the file, from the name (`3D`, `HSBS`, `Half-OU`...) and
+  above all from the picture, because the two halves of a 3D frame are almost the same image;
+  then it keeps one eye and brings it back to its shape: `3D: side by side (half), from the
+  picture (the two halves are the same image): one eye kept, 2D 1920x1080 -> 1920x1080`. A 2D
+  video with "3D" in its name by mistake is left alone, and the log says so. The black bars are
+  looked for after the conversion.
 
 These options exist only in *Encode video + mux*: *Merge without re-encoding* does not touch the
 picture.
@@ -1137,6 +1193,7 @@ preset, because they change from one folder to the next.
 | *OCR step: the language is not downloaded* | **Preferences → Subtitles / OCR**, choose the language, **Download**. |
 | The OCR slows down an encode | Lower **Parallel OCR processes** to 2. |
 | *Encode video: no video card can use H.264 NVENC* | The card was not found or failed the NVENC test: update the NVIDIA driver and press **Preferences → GPU → Detect again**, or choose x264 / x265. |
+| *The disc is protected* | Sequentia Nexus reads only discs without protection: the disc is skipped. |
 | *Upload to server: press Test connection* | With SFTP the server key is saved at the first connection: open **Preferences → Remote server** and press **Test connection**. |
 | The upload says the server does not answer | Check address and port, and that the NAS can be reached from outside (port open on the router, or the VPN connected). |
 | *No audio track found for languages ['eng']* | The video has no audio in the chosen language, and no audio without a language: check its tracks, or choose its language in *Extract audio and subtitles*. If its audio is only in another language, tick *Process this film* in the box *Audio in another language* before the start. |
