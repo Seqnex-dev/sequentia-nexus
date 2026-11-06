@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.48.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.51.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -86,6 +86,7 @@ The menus:
   Light, System). The program starts in the language of Windows (English when it is not one of
   its languages); the language is chosen in **Preferences → Language**. That page always says
   "Language" in English too, so it can be found even in a language you cannot read.
+- **Tools**: *File information...* (also **Ctrl+I**, see [File information](#file-information)).
 - **Help**: *Documentation* (also **F1**) opens this guide in a window of its own, in the
   language of the program: the chapters on the left (they open on their sections), the text on the
   right, a search field on top, and the usual buttons to make it full screen. The guide is kept up
@@ -128,6 +129,8 @@ input, work and output folders. Then:
   **🎬 Movies** and **📺 TV Series**, so they can have different settings;
 - if one of the two input folders has no videos, that part is skipped and the other one still
   runs.
+  The pre-flight window says so each time; to see it only in the log, untick
+  **Warn when the movies or TV series input folder has no videos** (Preferences → Folders).
 
 ---
 
@@ -165,6 +168,27 @@ them in any order.
 | Fix the aspect ratio of finished files | add **Aspect ratio** at the end, or use it alone |
 | Turn DVDs and Blu-rays into MKV files | Read DVD and Blu-ray (alone) |
 | Same, then convert the audio and clean the subtitles | **Read DVD and Blu-ray** before the other steps |
+
+### File information
+
+**Tools → File information...** (**Ctrl+I**), or a video dragged onto the main window, shows
+what a file contains: only what matters for a workflow, not the long list of a media analyser.
+
+- **Video**: codec and bits, size and shape, frames per second, bitrate, HDR (HDR10, HDR10+,
+  HLG, Dolby Vision, with the peak brightness) and the 3D flag.
+- **Audio** and **Subtitles**: language, codec, channels, bitrate, title, and which track is the
+  default, the original or a commentary. Subtitles also say if they are text or image, how many
+  lines they have and their type (forced, regular, SDH), as *Extract audio and subtitles* sees it.
+- **Attachments**: the fonts of ASS subtitles and the cover picture.
+- **What your workflow will do**: the tracks the current workflow would take and what happens to
+  them: audio conversion, subtitles and OCR, encode and size, HDR kept or converted, 3D, burned
+  subtitles, chapters. ✓ is fine, ⚠ needs a choice before the start, ✗ means the file would be
+  skipped. With movies and TV series apart, the values of the box of that file are used.
+- **Analyse picture** looks at a few pieces of the video, like *Encode video + mux* does:
+  progressive or interlaced, black bars, 3D. It takes from a few seconds to a minute.
+
+**Copy** copies everything as text, handy for an Issue. Another video dragged onto the window
+replaces the one shown.
 
 ---
 
@@ -683,7 +707,7 @@ over the film) and prepares the picture. The log says what it found for every vi
   then it keeps one eye and brings it back to its shape: `3D: side by side (half), from the
   picture (the two halves are the same image): one eye kept, 2D 1920x1080 -> 1920x1080`. A 2D
   video with "3D" in its name by mistake is left alone, and the log says so. The black bars are
-  looked for after the conversion.
+  looked for after the conversion. Black bars do not count when the two halves are compared, so a letterboxed 2D film is never taken for 3D.
 
 These options exist only in *Encode video + mux*: *Merge without re-encoding* does not touch the
 picture.
@@ -857,6 +881,46 @@ other. In the log the lines of that upload start with `[Upload Movies]`. The TV 
 waits for the movies one to end (the server gets no more connections than set), the original
 movies are deleted only after their upload went well, and the summary arrives when everything,
 uploads included, is over.
+
+### Extras
+
+Special jobs, outside the usual flow of a workflow.
+
+#### Transfer audio and subtitles
+
+Puts the audio and the subtitles of one version of a film (the **source**: a DVD, a 720p, a TV
+recording...) onto another version of the same film (the **target**: the 1080p, the 4K...): for
+example the dubbed language of an old DVD or of a 720p onto a 1080p that has only the original
+language. The step has its own two folders: **Source videos** (video files of any quality, `.iso`
+files or `VIDEO_TS` folders; from a DVD the main film is taken) and **Target videos**. The target
+folder must be another folder than the input folder.
+
+- **Pairs**: each target video gets the source with the same title and year. The check before
+  the start shows the pairs; each one can be changed, and a target video without a source is left
+  out.
+- **Everything is found by comparing the two audio tracks**: music and effects are the same even
+  when the languages differ. Speed (a PAL source runs 4 % faster: 25 frames per second instead of
+  23.976; also 24 / 23.976), delay, and cuts: where the two versions differ (a scene more in the
+  source or in the target), the audio gets silence or leaves the scene out, and the subtitles
+  follow. The log tells the speed, the delay, every cut and how well the two films match.
+- **Subtitles**: the ones in the subtitle language are fitted to the target as they are: text as
+  SRT, pictures (DVD VobSub, Blu-ray PGS) as pictures; a subtitle in a scene the target has not is
+  left out. **Convert image subtitles to SRT** (off) turns the pictures into SRT with the step
+  *Convert image subtitles to SRT*, which must be in the workflow (the check before the start says
+  so). **Subtitles in other languages**: more languages taken from the source in the same way, after
+  the other subtitles in the final file and not on by default; the subtitle steps do not change
+  them. **Convert ASS/SSA subtitles to SRT** (on): when off, an ASS / SSA stays as it is (colours,
+  positions, styles), fitted to the target, and the fonts attached to the source go into the final
+  file.
+- **Pitch of the voices**: *Like the film* (default) brings back the natural voices of a PAL
+  source; *Like the source* only fixes the length.
+- **Keep the original audio of the target** (on): it stays as an extra track, not the default.
+- The files get the names of the target videos, so **Audio settings**, the **OCR**, **Correct SRT
+  files** and **Merge** / **Encode** work on them together with the normal videos of the input
+  folder. The step comes after *Extract audio and subtitles*.
+- *Minimum match* (Advanced, 60 %): below it a film is not done (two different films, or versions
+  too different).
+- The source and target videos are never deleted. Only DVDs without protection are read.
 
 ---
 
