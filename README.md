@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.51.1-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.52.2-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -32,7 +32,8 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   episodes named `Show - S02E01 - Episode title` (titles from TVmaze). Only discs without
   protection.
 - **Transfer audio and subtitles**: the audio and the subtitles of one version of a film (a DVD,
-  a 720p...) brought onto another version (the 1080p, the 4K): for example a dubbed language onto
+  a 720p...) brought onto another version (the 1080p, the 4K; DVDs and Blu-rays also straight from
+  their `.iso` or folder): for example a dubbed language onto
   a film that has only the original one. Speed (PAL), delay and different cuts are found by
   comparing the two audio tracks; subtitles follow as text or as pictures (DVD, Blu-ray), in more
   languages if wanted; versions paired by title and year.

@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.51.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.52.2**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -895,6 +895,11 @@ language. The step has its own two folders: **Source videos** (video files of an
 files or `VIDEO_TS` folders; from a DVD the main film is taken) and **Target videos**. The target
 folder must be another folder than the input folder.
 
+- **Discs**: a source or a target can also be a DVD or a Blu-ray, as an `.iso` file or a
+  `VIDEO_TS` / `BDMV` folder: the main film is taken, as in *Read DVD and Blu-ray*. From a target
+  disc the step makes an MKV named after the disc, without re-encoding, and the next steps work on
+  it: the work folder needs room for the whole film (about 25-50 GB for a Blu-ray).
+  A disc without a name of its own (a folder called `1080p`) takes the name of its source.
 - **Pairs**: each target video gets the source with the same title and year. The check before
   the start shows the pairs; each one can be changed, and a target video without a source is left
   out.
@@ -915,12 +920,14 @@ folder must be another folder than the input folder.
 - **Pitch of the voices**: *Like the film* (default) brings back the natural voices of a PAL
   source; *Like the source* only fixes the length.
 - **Keep the original audio of the target** (on): it stays as an extra track, not the default.
+  The original is the track flagged as original or, when none is, the language the target shares
+  with the source (an Italian DVD and a Russian Blu-ray both have English).
 - The files get the names of the target videos, so **Audio settings**, the **OCR**, **Correct SRT
   files** and **Merge** / **Encode** work on them together with the normal videos of the input
   folder. The step comes after *Extract audio and subtitles*.
 - *Minimum match* (Advanced, 60 %): below it a film is not done (two different films, or versions
   too different).
-- The source and target videos are never deleted. Only DVDs without protection are read.
+- The source and target videos are never deleted. Only discs without protection are read.
 
 ---
 
