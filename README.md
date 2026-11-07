@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.52.2-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.53.1-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -36,7 +36,9 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   their `.iso` or folder): for example a dubbed language onto
   a film that has only the original one. Speed (PAL), delay and different cuts are found by
   comparing the two audio tracks; subtitles follow as text or as pictures (DVD, Blu-ray), in more
-  languages if wanted; versions paired by title and year.
+  languages if wanted; versions paired by title and year. An **extended version** keeps its extra
+  scenes in the original language with subtitles, or gets them cut to rebuild the shorter version:
+  cuts on shot changes, a fade where needed, only a few seconds encoded again.
 - **File information**: what a video contains (tracks, languages, HDR, 3D, fonts) and what your
   workflow will do with it, before you start; drag a video onto the window to see it.
 - **Extract** the best audio track and all subtitles in your language, sorted into

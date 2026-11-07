@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.52.2**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.53.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -417,6 +417,8 @@ How the type is chosen, in this order:
 
 The log shows the type of each track and why, for example `Stream 5: regular (504 lines, 18.1
 per minute)`.
+
+**Audio that does not start with the picture.** In some videos the audio track starts a little after the picture, or the picture after the audio, sometimes by seconds. The step notes where each audio track starts, and *Merge without re-encoding* and *Encode video + mux* put it back in the same place: the final file stays in sync like the original.
 
 ##### Extra languages
 
@@ -922,6 +924,20 @@ folder must be another folder than the input folder.
 - **Keep the original audio of the target** (on): it stays as an extra track, not the default.
   The original is the track flagged as original or, when none is, the language the target shares
   with the source (an Italian DVD and a Russian Blu-ray both have English).
+- **Scenes only in the target** (*Original language with subtitles*): for an extended version with
+  scenes the dub does not have. *Original language with subtitles* keeps the extended version whole:
+  those scenes play the original audio, and the subtitles of the target in the subtitle language (if
+  it has text ones) go into the forced subtitle, made when there is none, and into the regular one.
+  *Cut the scenes* rebuilds the shorter version: the scenes are taken out of the video, the audio, the
+  subtitles and the chapters follow, and the original audio is cut the same way. Each cut is moved to
+  the nearest shot change (within 0.6 s), where it is not seen; only a few seconds around each cut are
+  encoded again, the rest of the video is copied as it is (H.264 video; other formats stay whole, in
+  the original language, and the log says so). The work folder needs room for two copies of the film.
+  *Silence* keeps the extended version with silence in those scenes. Differences of a few frames
+  between two editions are always silent.
+- **Fade at the cuts** (with *Cut the scenes*, *Automatic*): a short fade to black and back, of
+  picture and sound, only where there is no shot change near the cut (a dialogue shortened inside the
+  same shot); *Always* or *Never*. The log tells, for every cut, where it is and how it was made.
 - The files get the names of the target videos, so **Audio settings**, the **OCR**, **Correct SRT
   files** and **Merge** / **Encode** work on them together with the normal videos of the input
   folder. The step comes after *Extract audio and subtitles*.
