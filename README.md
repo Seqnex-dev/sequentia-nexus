@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.58.0-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.59.1-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -138,7 +138,7 @@ inside the program are listed, with their licenses, in `THIRD-PARTY-NOTICES.txt`
 3. The first time, the **System Requirements** window opens by itself: press
    **Install all missing**.
 4. Get your free beta key at [sequentianexus.com/beta](https://sequentianexus.com/beta), then
-   open **Settings → Preferences → License**, paste it and press **Activate**.
+   open **Help → License**, paste it and press **Activate**.
 5. Open **Settings → Preferences → Folders** and choose the folder with your videos and the
    folder for the finished files.
 6. Double-click the steps you want in the **Script catalog**, set them up in **Parameters**,

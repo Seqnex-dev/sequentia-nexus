@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.58.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.59.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -29,8 +29,7 @@ This guide covers version **0.58.0**. Sequentia Nexus is in beta: some parts may
    the first time Windows may show *Windows protected your PC*: click **More info**, then
    **Run anyway**.
 4. Get your free beta key at **[sequentianexus.com/beta](https://sequentianexus.com/beta)**
-   (one click and a quick "I am not a robot" check), then open **Settings → Preferences →
-   License**, paste it and press **Activate** (see [License](#license)).
+   (one click and a quick "I am not a robot" check), then open **Help → License**, paste it and press **Activate** (see [License](#license)).
 
 To update, unpack the new version in place of the old one: your preferences, presets and
 license stay where they are (see [Where your data is stored](#11-where-your-data-is-stored)).
@@ -93,7 +92,7 @@ The menus:
   to date from sequentianexus.com (also when there is no new version of the program) and works
   offline too. The same guide is on the site, at
   [sequentianexus.com/guide](https://sequentianexus.com/guide/). *Check for updates...* (see
-  [Updates](#updates)), *About*.
+  [Updates](#updates)), *License* (see [License](#license)), *About*.
 
 ![Light theme](images/main_light.png)
 
@@ -1270,8 +1269,8 @@ updates...*, checks at once (also for a skipped version).
 ### License
 
 During the beta the license key (`SNX-XXXXX-XXXXX-XXXXX-XXXXX`) is free: get it at
-[sequentianexus.com/beta](https://sequentianexus.com/beta) (the page *Preferences → License*
-has the link too), paste it in **Preferences → License** and press **Activate**.
+[sequentianexus.com/beta](https://sequentianexus.com/beta) (the page *Help → License*
+has the link too), paste it in **Help → License** and press **Activate**.
 
 - The page gives one key a day and a few keys in all to each connection, and a limited number
   of keys a day in all: when today's keys are finished, it asks to come back tomorrow.
@@ -1290,6 +1289,9 @@ has the link too), paste it in **Preferences → License** and press **Activate*
   of the PC.
 - Keep the PC date and time correct: the reply of the license server is checked, and a wrong
   date can make the check fail.
+- **Help → About** shows the name the license is registered to, the key (only its first and last
+  part, enough for support) and the expiry (none during the beta). **Help → License** is where you
+  activate or deactivate it; until version 0.58.0 it was in the Preferences.
 
 ---
 
@@ -1314,7 +1316,7 @@ preset, because they change from one folder to the next.
 |---|---|
 | *The license server cannot be reached* | Check the internet connection: it is needed to start a workflow. |
 | *Too many requests to the license server* | Wait a few seconds and press **Start workflow** again. |
-| *This license has been activated on another PC* | The license was moved to another PC. To use it here, activate it again in **Preferences → License** (the other PC loses it). |
+| *This license has been activated on another PC* | The license was moved to another PC. To use it here, activate it again in **Help → License** (the other PC loses it). |
 | *Start workflow* shows errors | Read the list: each error says what to fix. Missing programs are installed from **Settings → System Requirements**. |
 | The folder window takes a few seconds to open the first time | That is Windows loading it. The mouse pointer shows that it is busy, and the window comes to the front when it is ready. |
 | The final file has no subtitles | Check the log: the video may have no subtitles in the chosen language, or only image subtitles without the OCR step in the workflow. |
