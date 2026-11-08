@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.53.1-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.58.0-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -36,9 +36,10 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   their `.iso` or folder): for example a dubbed language onto
   a film that has only the original one. Speed (PAL), delay and different cuts are found by
   comparing the two audio tracks; subtitles follow as text or as pictures (DVD, Blu-ray), in more
-  languages if wanted; versions paired by title and year. An **extended version** keeps its extra
+  languages if wanted; you choose the source and the target file of each film (or two folders paired by title and year, for a TV series). An **extended version** keeps its extra
   scenes in the original language with subtitles, or gets them cut to rebuild the shorter version:
-  cuts on shot changes, a fade where needed, only a few seconds encoded again.
+  cuts on shot changes, a fade where needed, only a few seconds encoded again; **Review cuts**
+  shows each cut with and without the fade and adds the fades you choose afterwards.
 - **File information**: what a video contains (tracks, languages, HDR, 3D, fonts) and what your
   workflow will do with it, before you start; drag a video onto the window to see it.
 - **Extract** the best audio track and all subtitles in your language, sorted into
@@ -71,8 +72,10 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   stay in the final file; an episode that lacks one borrows it from the other episodes.
 - **Change the aspect ratio** of the final files without re-encoding.
 - **Upload the finished files to your NAS** (SFTP, FTPS or FTP), also from outside home,
-  into the movies and series folders, with resume if the connection drops: several files at
-  once, and each file as soon as it is ready, while the others are still encoding.
+  into the movies and series folders: to one or more servers (NAS home, NAS at the sea...),
+  one after the other or all together, several files at once, and each file as soon as it is
+  ready, while the others are still encoding. A server that does not answer keeps its files
+  for *Continue upload*.
 - **Movies and TV series** can have separate folders and separate settings: one workflow,
   two passes.
 - **Pause and resume** a run, see the **time left** and the encode speed, put the PC to
@@ -80,8 +83,10 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   stays usable.
 - **Updates**: the program tells you when a new version is out and downloads it for you
   (nothing installs by itself).
-- **Queue**: several workflows, each with its own folders, run one after the other; all the
-  checks are done at the start, then it runs unattended, every job with its own log.
+- **Queues**: workflows with their own files to process (folders or single files from anywhere,
+  dropped on the window; films and episodes told apart from the name), each with its own copy of
+  a preset changed in a workflow editor (the preset file changes only when you save it), saved by
+  name and run after the main workflow; all the checks at the start, then unattended.
 - **Guide in 11 languages**, inside the program (Help → Documentation, F1: chapters, search,
   always up to date from the site) and at
   **[sequentianexus.com/guide](https://sequentianexus.com/guide/)**.

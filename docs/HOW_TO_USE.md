@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.53.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.58.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -76,12 +76,12 @@ A program installed here is found right away: you don't need to restart the app.
 | **Parameters** (right) | The settings of the step selected in the workflow. |
 | **Log** (bottom) | What the app is doing, live. **📋 Copy log** copies it all. |
 | **▶ Start workflow / ❚❚ Pause / ■ Stop** | Start, pause and stop the run. The bar next to them shows the progress; **When done** on the right puts the PC to sleep, hibernates it or shuts it down at the end (see [Run a workflow](#5-run-a-workflow)). |
-| **Queue** | Adds the current workflow to the queue, or shows the queue: several workflows with their own folders, run one after the other (see [The queue](#the-queue)). |
+| **Queue** | Opens the queue window: workflows with their own files to process, run after the main workflow (see [The queue](#the-queue)). |
 
 The menus:
 
 - **File**: *New workflow*, *Open preset...*, *Save preset as...*, *Delete preset...*,
-  *Queue...*, *Exit*.
+  *Queue...*, *Open queue...*, *Load all queues*, *Delete queue...*, *Exit*.
 - **Settings**: *Preferences...* (also **Ctrl+,**), *System Requirements...*, *Theme* (Dark,
   Light, System). The program starts in the language of Windows (English when it is not one of
   its languages); the language is chosen in **Preferences → Language**. That page always says
@@ -208,6 +208,7 @@ While it runs:
 - **Nothing can be changed**: the catalog, the workflow list, the parameters (shown in grey),
   the presets and the Preferences are locked, so it is clear that the run uses the settings it
   started with. The log, the theme, About, **Pause**, **Stop** and **When done** stay usable.
+- **Stop** works also while the final files are being moved to the output folder: the move stops at once, the files already moved are complete, and the others stay in the work folder (the log says where).
 - The **workflow list follows the run**: no row is highlighted; every step that is working
   right now shows a **blue arrow that turns** on its right, also two at once (for example the
   audio converted during the encode, or the movies uploaded while the TV series are processed).
@@ -288,42 +289,88 @@ step before it.
 
 ### The queue
 
-The **queue** runs several workflows one after the other, each with **its own folders**: for
-example a TV series in one folder with one preset, then a film in another folder with another
-preset, started in the evening with *When done → Shut down*.
+A **queue** is a workflow with **its own files to process**: for example the films of a download
+folder with one preset and a TV series from another disk with another preset, started in the
+evening with *When done → Shut down*. **▶ Start workflow** runs the main workflow first (the one in
+the workflow panel, when the input folders of the Preferences have files), then the ticked queues,
+one after the other. The button says what it will do: `▶ Start workflow + 2 queues`, or
+`▶ Start 2 queues` when the input folders of the Preferences are empty.
 
-- **Queue → Add current workflow** (the button next to **Stop**) adds the workflow shown now,
-  with its steps, parameters and file choices, and the folders of *Preferences → Folders* at that
-  moment (folder mode, input, work and output). Change the folders or the preset and add the next
-  job: every job keeps its own.
-- **Queue → Show queue...** (also *File → Queue...*, `Ctrl+Shift+Q`) opens the queue window: the
-  jobs in order, their input folders (the whole paths in the tooltip), their state (*Waiting*,
-  *Running*, ✓ *Done*, ✗ *With errors*, ■ *Stopped*, – *Skipped*) and their result
-  (`2 videos processed in 00:12:40`).
-  - **Drag** a job to change the order.
-  - **Folders...** (or a double click) changes the folders of that job only.
-  - **Load into workflow** shows a job in the workflow panel: change its steps or parameters, then
-    **Use current workflow** puts them back in the job (its folders stay).
-  - **Run again** puts a finished job back to waiting; **Open log** shows the log of a finished
-    job; **Remove** and **Remove finished** clean the list.
-  - **Save queue...** / **Open queue...**: a queue file (`.snxqueue`) to keep or move to another
-    PC; opening one adds its jobs at the end.
-- **▶ Start queue**: first the **checks of every waiting job**, one after the other, with the
-  usual pre-flight window for each job (its name in the title): all the questions (warnings,
-  tracks without a language) are asked now, so the queue can then run unattended. A job that does
-  not pass the checks, or that you cancel, is *Skipped*. Then the jobs run one at a time: the
-  workflow panel shows the running job, the log shows its log.
-- A job that ends **with errors** is marked ✗ and the queue goes on with the next one. Every job
-  keeps its own log in the log folder (also with *Preferences → Log* off). **Stop** stops the whole
-  queue: the jobs not started yet stay *Waiting*. **Pause** pauses the running job.
-- At the end the last line of the log sums up the queue
-  (`Queue finished: 3 jobs done, 1 with errors, in 02:10:00`); the notifications and **When done**
-  come once, for the whole queue.
-- The queue is kept when the program closes; a job that was running then is *Waiting* again.
-  Jobs added while the queue runs wait for the next start of the queue.
+The **Queue** button next to **Stop** (also *File → Queue...*, `Ctrl+Shift+Q`) opens the queue
+window. The program starts with no queue loaded.
 
-One job at a time is on purpose: a job already uses every video card (an encode on two cards) and
-the CPU (audio converted in parallel), and two jobs together would only slow each other down.
+- **+ Add new queue** adds a queue: a box that opens and closes with a click on its title, like the
+  sections of the catalog. In the box:
+  - the **tick box** next to the name: ticked, the queue runs with Start; unticked, it stays in the
+    list and waits;
+  - **Name** (optional: without one the queue is *Queue 1*, *Queue 2*...);
+  - **Workflow**: **Open preset...** copies a preset into the queue, **Create workflow...** starts a
+    new empty one, **Edit workflow...** changes the one of the queue. Both open the **workflow
+    editor**: the script catalog, the workflow and the parameters, as in the main window, with
+    **Save changes** at the bottom. In the editor the *Movies* and *TV series* boxes are always
+    there, and the lists of the steps that choose file by file (Aspect ratio per file, Sync per
+    subtitle, the rules of Correct SRT) show the files of this queue. **Save as preset...** saves
+    the workflow of the queue as a preset (the same name replaces it, a new name makes a new
+    preset);
+  - **Files**: the folders and single files to process, from any folder or disk: **Add files...**,
+    **Add folder...**, or drop them **anywhere on the queue window** (on a queue: into that queue;
+    elsewhere: into the open one). A folder means all its videos and discs, a file only that file; ×
+    takes one off. Under the list, how many videos there are (`5 videos: 2 films, 3 episodes`);
+  - **Output**: *As in the Preferences* (the output folders of *Preferences → Folders*, for films or
+    for series) or *This folder*. The work folder is always the one of the Preferences;
+  - **Upload**, only when the workflow has **Upload to server**: with several servers, the servers
+    of this queue; the **folders on the server** for the films and the series of this queue (empty:
+    the ones of the server).
+- **Films and episodes** are told apart from the name: `S01E01` or `1x01` is an episode, everything
+  else a film (a disc with `S02` in its name is a season). So a queue can mix them: each file gets
+  the *Movies* or *TV series* values of the steps (or the single box, if the preset was made with
+  one folder) and goes to the films or the series folder.
+- **Save queue** (in the box) or **Save all queues** (at the bottom) saves the queues by name, like
+  the presets, and closes their boxes. **The files to process are never saved**: they change every
+  time. A title with `*` has changes not saved yet; × in the title takes the queue off the list (its
+  saved file stays).
+- *File → Open queue...* loads a saved queue (also a `.snxqueue` file of the earlier versions: each
+  of its jobs becomes a queue, without its folders), *File → Load all queues* loads them all, *File
+  → Delete queue...* deletes a saved one.
+- **Drag** a queue by its title to change the order.
+- At the start come the **checks of everything**: the main workflow, then every ticked queue, with
+  the usual pre-flight window (its name in the title). All the questions are asked now, so
+  everything can then run unattended. A queue that does not pass the checks, or that you cancel, is
+  skipped. Then they run one at a time: the workflow panel shows the one running and the log its
+  log; at the end the main workflow comes back in the panel.
+- The title of each queue shows its state like the workflow list: the turning arrow while it runs,
+  then ✓, ✗ (with errors), ■ (stopped) or – (skipped), with the result (`2 films processed in
+  00:12:40`) and **Open log**. A queue that is running or waiting to run cannot be changed.
+- A queue that ends **with errors** does not stop the others. Each keeps its own log in the log
+  folder (also with *Preferences → Log* off). **Stop** stops everything: the queues not started yet
+  are marked *not started*. **Pause** pauses the one running.
+- At the end the last line of the log sums everything up (`Everything finished: 3 workflows done, 1
+  with errors, in 02:10:00`); the notifications and **When done** come once, for everything.
+
+**A queue and its preset are two separate things.** The queue keeps its own copy of the workflow,
+and the line under its steps always says which one it is: *Copy of the preset "Movies 1080p"* while
+nothing was changed, *Changed copy of the preset "Movies 1080p"* after **Edit workflow...**
+(the **?** next to *Workflow* explains it too). An example:
+
+1. **Open preset...** → *Movies 1080p* (films at 4000 kbit/s): the queue gets a copy of it.
+2. **Edit workflow...**: the bitrate of the films goes to 6000, then **Save changes**. The line now says *Changed copy*.
+3. **Save queue**: the queue remembers 6000; opened again next week, it still has 6000.
+4. *Movies 1080p* opened in the main window, or in another queue, still has 4000: the preset file was not touched.
+5. To have 6000 in the preset too: **Save as preset...** with the same name (it is replaced) or with a new name (a new preset).
+
+![The Queue window](images/queue.png)
+
+![The workflow editor of a queue](images/queue_editor.png)
+
+**Files added later.** When a step has choices made file by file (Aspect ratio per file, Sync per
+subtitle, a rule of Correct SRT on some subtitles) and files are added to the queue after those
+choices, the program asks to make the choices for the new files too: **Make the choices...** opens
+the workflow editor, **Later** leaves it for now. At the start it asks again for the files still
+without choices: **Go on like this** (the new files get the common value of the step, or stay out
+of a step where only some files were chosen) or **Skip this queue**.
+
+One workflow at a time is on purpose: one already uses every video card (an encode on two cards)
+and the CPU (audio converted in parallel), and two together would only slow each other down.
 
 ### Where the files end up
 
@@ -490,6 +537,8 @@ has **Convert image subtitles to SRT**.
 
 > AAC audio is saved as `.mka`, not as a raw `.aac`: some AAC 5.1 tracks lose their channel
 > layout in a raw file and become silent after merging.
+
+> Converted audio keeps its exact timing. Every encoder adds a few milliseconds at the start of the track (AAC 21 ms, MP3 up to 47 ms, AC3 and E-AC3 5 ms, DTS 11 ms): AAC and MP3 are saved as `.mka`, which tells the player to skip them, and for AC3, E-AC3 and DTS the same amount is taken off the start, so every sound stays on its frame.
 
 ### Audio
 
@@ -856,18 +905,16 @@ the encode if *Upload each file as soon as it is ready* is on in
   `1x01` in the name means an episode);
 - every file is uploaded as `name.mkv.part` and renamed only when it is complete, so a media
   server (Plex, Jellyfin...) never sees half a film;
-- if the connection drops, the upload is tried again and goes on from where it stopped. A
-  `.part` left by a stopped workflow is resumed the next time;
+- every attempt after a dropped connection sends the film again from the beginning;
 - at the end the size on the server is checked.
 
-If a file cannot be uploaded, the workflow ends with errors and the original videos are
-**not** deleted, even if *Delete the original videos* is on.
+**Several servers.** The step uploads to every server of [Preferences → Remote server](#remote-server) (with more than one, the boxes **Servers** choose which ones for this workflow), one after the other or all at the same time. A server that does not answer after the attempts is left (the others go on) and gets one last attempt at the end. If even that fails, the final files stay on this PC, the original videos and the work files are deleted as usual (the films are done), and a window says which server had the problem: **Continue upload** sends the missing films when the server is back, **Later** asks again at the next start of the program, **Give up** forgets them. The same window opens from **Tools → Uploads to finish**.
 
 | Setting | |
 |---|---|
 | If the file is already on the server | **Replace** (the old file is replaced only when the new one is complete) or **Skip**. |
-| Delete the local files after the upload | Off by default. After a good upload the final file is deleted from this PC, handy on a laptop. A file that was not uploaded is never deleted. |
-| *Attempts if the connection drops* | *Advanced*, default 5, waiting longer each time (5 s, 15 s, 30 s, 1 min, 2 min). |
+| Delete the local files after the upload | Off by default. A final file is deleted from this PC only when it is on every server that should get it, handy on a laptop. A file missing on even one server is never deleted. |
+| Servers | Only with several servers in Preferences: which ones get the files of this workflow (all ticked by default; a server added later is ticked by itself). |
 
 The time an upload takes depends on the upload speed of the network you are on: on a mobile
 connection or a hotel Wi-Fi a 5 GB film can take more than an hour. The log shows the speed of
@@ -890,21 +937,14 @@ Special jobs, outside the usual flow of a workflow.
 
 #### Transfer audio and subtitles
 
-Puts the audio and the subtitles of one version of a film (the **source**: a DVD, a 720p, a TV
-recording...) onto another version of the same film (the **target**: the 1080p, the 4K...): for
-example the dubbed language of an old DVD or of a 720p onto a 1080p that has only the original
-language. The step has its own two folders: **Source videos** (video files of any quality, `.iso`
-files or `VIDEO_TS` folders; from a DVD the main film is taken) and **Target videos**. The target
-folder must be another folder than the input folder.
+Puts the audio and the subtitles of one version of a film (the **source**: a DVD, a 720p, a TV recording...) onto another version of the same film (the **target**: the 1080p, the 4K...): for example the dubbed language of an old DVD or of a 720p onto a 1080p that has only the original language.
 
 - **Discs**: a source or a target can also be a DVD or a Blu-ray, as an `.iso` file or a
   `VIDEO_TS` / `BDMV` folder: the main film is taken, as in *Read DVD and Blu-ray*. From a target
   disc the step makes an MKV named after the disc, without re-encoding, and the next steps work on
   it: the work folder needs room for the whole film (about 25-50 GB for a Blu-ray).
   A disc without a name of its own (a folder called `1080p`) takes the name of its source.
-- **Pairs**: each target video gets the source with the same title and year. The check before
-  the start shows the pairs; each one can be changed, and a target video without a source is left
-  out.
+- **Videos to pair**: *I choose the files* (default): one box per film with the **source** and the **target** video, chosen with **...** or dropped from Explorer, also in different folders; **+ Add film** adds another one, **↔** swaps source and target, **×** removes the film. The window shows videos (MKV, MP4, AVI, MOV, TS, M2TS), `.iso` files and, for a disc in a folder, its `VIDEO_TS.IFO` (DVD) or `index.bdmv` (Blu-ray). Under each file a line tells its duration, picture and languages, so a wrong film is seen at once. The films are not saved in the presets. The check before the start stops on a missing file, the same video as source and target, a target used twice or a target in the input folder. *Two folders (TV series)*: **Source videos** and **Target videos**, paired by title and year, handy for a whole season; the check before the start shows the pairs, each can be changed, and a target video without a source is left out. The target folder must be another folder than the input folder.
 - **Everything is found by comparing the two audio tracks**: music and effects are the same even
   when the languages differ. Speed (a PAL source runs 4 % faster: 25 frames per second instead of
   23.976; also 24 / 23.976), delay, and cuts: where the two versions differ (a scene more in the
@@ -921,9 +961,7 @@ folder must be another folder than the input folder.
   file.
 - **Pitch of the voices**: *Like the film* (default) brings back the natural voices of a PAL
   source; *Like the source* only fixes the length.
-- **Keep the original audio of the target** (on): it stays as an extra track, not the default.
-  The original is the track flagged as original or, when none is, the language the target shares
-  with the source (an Italian DVD and a Russian Blu-ray both have English).
+- **Keep the original audio of the target** (on): it stays as an extra track, not the default. The original, which is also the track compared with the source, is the track flagged or titled as original; else English, then French, German, Spanish, Portuguese; else the first track of the file. Commentaries, dubs and voice-overs (from the track title: "Dubbing", "MVO"...) are left out while there is another track: a Russian release often starts with a Russian voice-over. **Anime or Asian film** (off): when on, Japanese, Chinese and Korean come before that list (an anime often has the English dub as its first track).
 - **Scenes only in the target** (*Original language with subtitles*): for an extended version with
   scenes the dub does not have. *Original language with subtitles* keeps the extended version whole:
   those scenes play the original audio, and the subtitles of the target in the subtitle language (if
@@ -938,6 +976,7 @@ folder must be another folder than the input folder.
 - **Fade at the cuts** (with *Cut the scenes*, *Automatic*): a short fade to black and back, of
   picture and sound, only where there is no shot change near the cut (a dialogue shortened inside the
   same shot); *Always* or *Never*. The log tells, for every cut, where it is and how it was made.
+- **Review cuts** (with *Fade at the cuts* set to *I choose after the workflow*): no fade is made during the workflow; at the end the log says which films have cuts to review, and **Tools → Review cuts** lists every cut: where it is, how long the scene taken out was and whether it fell on a shot change. A preview plays the seconds around the cut without or with the fade, and the advised fades are already ticked. **Apply fades** adds the ticked fades to the final file, encoding again only the seconds around each cut (the AC3 / E-AC3 sound only around the cut, FLAC without loss). It works with H.264 videos. The cuts made with the other choices are listed too, so a fade can still be added where there was none.
 - The files get the names of the target videos, so **Audio settings**, the **OCR**, **Correct SRT
   files** and **Merge** / **Encode** work on them together with the normal videos of the input
   folder. The step comes after *Extract audio and subtitles*.
@@ -1098,7 +1137,7 @@ Both are off by default.
 
 ![Preferences: remote server](images/prefs_remote.png)
 
-The server used by the **Upload to server** step.
+The servers used by the **Upload to server** step, one tab each. **+ Add server** adds one, **Delete server** removes it (and its saved password), ◀ ▶ change the order (with *One after the other* the first goes first). **Label** (optional): a name to recognise it, such as "NAS home" or "NAS at the sea"; two servers cannot have the same label, and without one a server is called "server 2" after its place. An empty movies or series folder means that this server does not get those files. The single server of an older version becomes the first tab by itself.
 
 **Connection**
 
@@ -1122,12 +1161,14 @@ internet.
 
 **Upload**
 
+- **With several servers**: **One after the other** (default: the first server gets every file, then the second starts, and so on) or **All at the same time** (every server at once, for a fast upload). A server that does not answer is left after the attempts and gets one last attempt at the end; see [Upload to server](#upload-to-server).
+- **Attempts for a file** (default 5): how many times a file is tried again when the connection drops or the server does not answer, waiting longer each time (5 s, 15 s, 30 s, 1 min, 2 min); each attempt sends the film from the beginning.
 - **Simultaneous uploads** (1 to 5, default 1): how many files go up at the same time, each on
   its own connection. It helps when each connection is limited by the server (many FTP servers
   do it) or by the distance (SFTP over a slow link); it does not help when the limit is the
   upload speed of the network you are on, because the files then share it. Some NAS boxes
   accept only a few connections at once: when the server refuses one, the log says so and
-  that file tries again as soon as another one is finished.
+  that file tries again as soon as another one is finished. Each server has its own value, in its tab.
 - **Upload each file as soon as it is ready** (off by default): the upload starts together with
   *Encode video + mux* (or *Merge without re-encoding*): each file goes up as soon as it is
   finished, while the others are still being encoded. With a series, when the last episode is
@@ -1303,7 +1344,7 @@ On Windows, in `%APPDATA%\SequentiaNexus\`:
 | `requirements.json` | The last requirements check |
 | `license.json` | The license activated on this PC (the activation is protected by Windows) |
 | `steps\` | The steps received from the license server, encrypted |
-| `queue.json` | The queue of jobs |
+| `queues\` | The saved queues |
 | `guide\` | The user guide downloaded from the site |
 
 Deleting the app folder does not remove this folder: delete it by hand if you want a clean
