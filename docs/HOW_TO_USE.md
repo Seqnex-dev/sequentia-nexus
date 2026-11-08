@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.59.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.59.3**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -106,7 +106,7 @@ Open **Settings → Preferences... → Folders** before the first run.
 
 | Folder | What goes there |
 |---|---|
-| **Original input folder** | The videos to process (`.mkv`, `.mp4`, `.avi`, `.mov`). DVDs and Blu-rays too: `.iso` files and `VIDEO_TS` / `BDMV` folders (see [Read DVD and Blu-ray](#read-dvd-and-blu-ray)). The button with the disc chooses a drive of the PC: the disc in it is read. |
+| **Original input folder** | The videos to process (`.mkv`, `.mp4`, `.avi`, `.mov`, `.webm`). DVDs and Blu-rays too: `.iso` files and `VIDEO_TS` / `BDMV` folders (see [Read DVD and Blu-ray](#read-dvd-and-blu-ray)). The button with the disc chooses a drive of the PC: the disc in it is read. |
 | **Work folder** | Temporary files while the workflow runs. Leave it empty to use the default folder inside the app (`work`). It is cleaned at the end. |
 | **Output folder** | The finished files. Tick *Use work folder as output* to keep them in the work folder instead. |
 
@@ -487,9 +487,9 @@ original one). For each language the best track is taken, leaving out commentari
   missing subtitles, OCR) do not touch them; *Synchronize subtitles* does, like every subtitle of
   the video. With the hardsub they are not muxed, like the other subtitles.
 
-**Video formats.** The input folder can hold `.mkv`, `.mp4`, `.avi` and `.mov` files; the
+**Video formats.** The input folder can hold `.mkv`, `.mp4`, `.avi`, `.mov` and `.webm` files; the
 final file is always an `.mkv` (`Film.mp4` becomes `Film.mkv`). Files in other video formats
-(`.ts`, `.webm`, `.wmv`...) are skipped, and the check before the start lists them. Two files
+(`.ts`, `.wmv`...) are skipped, and the check before the start lists them. Two files
 with the same name and different extensions (`Film.mp4` and `Film.mkv`) would give the same
 final file: the check before the start stops and asks to rename one. `.iso` files and folders with a copied disc are read by the step [Read DVD and Blu-ray](#read-dvd-and-blu-ray); without it the check before the start lists them and they are ignored.
 
@@ -943,7 +943,7 @@ Puts the audio and the subtitles of one version of a film (the **source**: a DVD
   disc the step makes an MKV named after the disc, without re-encoding, and the next steps work on
   it: the work folder needs room for the whole film (about 25-50 GB for a Blu-ray).
   A disc without a name of its own (a folder called `1080p`) takes the name of its source.
-- **Videos to pair**: *I choose the files* (default): one box per film with the **source** and the **target** video, chosen with **...** or dropped from Explorer, also in different folders; **+ Add film** adds another one, **↔** swaps source and target, **×** removes the film. The window shows videos (MKV, MP4, AVI, MOV, TS, M2TS), `.iso` files and, for a disc in a folder, its `VIDEO_TS.IFO` (DVD) or `index.bdmv` (Blu-ray). Under each file a line tells its duration, picture and languages, so a wrong film is seen at once. The films are not saved in the presets. The check before the start stops on a missing file, the same video as source and target, a target used twice or a target in the input folder. *Two folders (TV series)*: **Source videos** and **Target videos**, paired by title and year, handy for a whole season; the check before the start shows the pairs, each can be changed, and a target video without a source is left out. The target folder must be another folder than the input folder.
+- **Videos to pair**: *I choose the files* (default): one box per film with the **source** and the **target** video, chosen with **...** or dropped from Explorer, also in different folders; **+ Add film** adds another one, **↔** swaps source and target, **×** removes the film. The window shows videos (MKV, MP4, AVI, MOV, WebM, TS, M2TS), `.iso` files and, for a disc in a folder, its `VIDEO_TS.IFO` (DVD) or `index.bdmv` (Blu-ray). Under each file a line tells its duration, picture and languages, so a wrong film is seen at once. The films are not saved in the presets. The check before the start stops on a missing file, the same video as source and target, a target used twice or a target in the input folder. *Two folders (TV series)*: **Source videos** and **Target videos**, paired by title and year, handy for a whole season; the check before the start shows the pairs, each can be changed, and a target video without a source is left out. The target folder must be another folder than the input folder.
 - **Everything is found by comparing the two audio tracks**: music and effects are the same even
   when the languages differ. Speed (a PAL source runs 4 % faster: 25 frames per second instead of
   23.976; also 24 / 23.976), delay, and cuts: where the two versions differ (a scene more in the

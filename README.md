@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.59.1-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.59.3-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
