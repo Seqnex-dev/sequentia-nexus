@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.59.4-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.61.5-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -50,9 +50,12 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   Several files are converted at the same time.
 - **Read image subtitles** from Blu-rays (`.sup`) and DVDs (`.idx/.sub`) and turn them into
   SRT text, with a smart correction that fixes the typical OCR mistakes.
+- **Subtitles from the audio**: a video without subtitles gets one by speech to text
+  (Whisper), on the NVIDIA video card or on the CPU.
 - **Fix the subtitles**: clean tags and encoding errors, create a missing *regular* or
   *forced* subtitle, resync the timing, and add your own find-and-replace rules with a live
-  preview on the real subtitles of your videos.
+  preview on the real subtitles of your videos; save the rules and load them in other
+  workflows, or share them as a file.
 - **Merge** everything into an MKV, or **encode** the video (NVIDIA NVENC or CPU,
   H.264 / H.265). With two NVIDIA cards, two videos are encoded at the same time, and the
   CPU converts the audio while the cards encode.

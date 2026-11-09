@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.59.4**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.61.5**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -51,6 +51,7 @@ The app needs some external programs. The first time they are missing, the
 | **mkvmerge** | Merging the final MKV files |
 | **mkvpropedit** | The *Aspect ratio* step |
 | **tesseract** *(optional)* | Only the *Convert image subtitles to SRT* step |
+| **Microsoft Visual C++ Redistributable** *(optional)* | Only the *Transcribe audio to subtitles* step (most PCs already have it) |
 
 - A green check means the program is ready.
 - **Install** installs a single missing item; **Install all missing** installs all the
@@ -130,6 +131,8 @@ input, work and output folders. Then:
   runs.
   The pre-flight window says so each time; to see it only in the log, untick
   **Warn when the movies or TV series input folder has no videos** (Preferences → Folders).
+  An input folder that is not set at all counts as empty: you can leave the TV Series folder blank if you only process movies (or the other way round).
+  If an input folder no longer exists (for example a USB or network disk not connected), a window asks before the checks: **Retry**, **Change folder...** (saved in Preferences), **Skip this part** (Movies / TV Series only) or **Cancel**. If the Movies or TV Series input folder is not set but *Transfer audio and subtitles* has pairs of files in that part, you can **Choose input folder...** or **Go on with the pairs only**.
 
 ---
 
@@ -576,7 +579,7 @@ file (`[2/3] Conversion -> ...`).
 
 ### Subtitles
 
-These steps run in this order: OCR → Create missing → Correct → Synchronize. Each one passes
+These steps run in this order: OCR → Transcribe → Create missing → Correct → Synchronize. Each one passes
 all the subtitles on to the next step, including the ones it does not change.
 
 #### Convert image subtitles to SRT
@@ -598,6 +601,18 @@ SDH track without "SDH" in its title looks like a regular one. After the OCR, a 
 subtitle with many sound descriptions in brackets (the *SDH threshold* of *Extract audio and
 subtitles*) becomes an **SDH**, and *Create missing subtitles* then makes the clean regular
 from it. When SDH is not ticked in the extraction, the sound descriptions are removed at once.
+
+#### Transcribe audio to subtitles
+
+Creates the subtitle of the videos that have none in the language of *Extract audio and subtitles*, by listening to the audio (speech to text, with the Whisper model). The result is the **regular** subtitle, which then goes through *Create missing subtitles*, *Correct SRT files* and *Synchronize subtitles* like the others.
+
+The parameters list the videos of the input folder (or of the queue) **without a subtitle in that language**, with their length and audio languages. Tick the videos to transcribe, or use **Select all** / **Deselect all**: at the start none is ticked, and the ticks are not saved in presets. A video whose subtitle in the language is an **image** (DVD, Blu-ray) is listed, in orange, only when the workflow has no OCR: the OCR reads the real subtitle of the disc, more accurate than a transcription, and **Add the OCR to the workflow** adds that step with one click. The check before the start warns when no video is ticked or a ticked video has an image subtitle.
+
+- The audio track used is the one in the language of the workflow (not a commentary), or a track without a language.
+- A voice filter skips music and silence; lines Whisper is unsure of, typical invented phrases ("Thanks for watching") and repeated lines are left out.
+- The lines follow the usual subtitle rules: at most two lines of 42 characters, a new subtitle at the end of a sentence or after a pause, enough time on screen to read it.
+- Only the dialogue is written: no *forced* subtitle (signs on screen) and no sound descriptions.
+- The model is downloaded once in [Preferences → Speech to text](#speech-to-text). With an NVIDIA video card a film takes a few minutes; with the CPU from half an hour to more than an hour.
 
 #### Create missing subtitles
 
@@ -1015,6 +1030,8 @@ The rules run from top to bottom, after the automatic corrections. Use **Up** an
 change their order. The window can be maximised; drag the bar between the table and the
 preview to resize them.
 
+**Saving and loading rules.** The rules are saved with the preset, and you can also keep them apart to use them in other workflows: **Save rules → Save with a name...** keeps them in the program, **Save rules → Export to a file...** writes a `.json` file to keep or to send to someone. **Load rules** lists the saved rules, plus **Open a file...** and **Delete saved rules...**. When the window already has rules, the program asks whether to **Replace** them or **Add at the end** the loaded ones. A rule that applies only to some subtitles finds them again when they are in this workflow too; otherwise its *Applies to* shows *None* in red, and you tick the subtitles again.
+
 #### Preview
 
 The preview shows the result live: changed lines in **blue**, deleted ones **struck out in
@@ -1113,6 +1130,16 @@ the workflow is stopped or has other errors (for example a failed upload).
 | Tesseract | Where Tesseract was found. Leave *Path* empty unless you installed it in an unusual place. |
 | Parallel OCR processes | See [Speed](#ocr-of-image-subtitles). |
 
+### Speech to text
+
+| Setting | |
+|---|---|
+| Model | **large-v3-turbo** (default, about 1.5 GB, fast) or **large-v3** (about 2.9 GB, the most accurate, 3-4 times slower), with **Download** / **Remove**. Whisper models under the MIT licence, from Hugging Face. |
+| Transcribe with | *Automatic*: the NVIDIA video card when it is ready, otherwise the CPU; or *The CPU only*. The card is the one chosen in [GPU](#gpu). |
+| NVIDIA libraries | To use the video card the NVIDIA cuBLAS libraries are needed (about 0.5 GB, downloaded from NVIDIA with **Download**, under their licence). Without them the CPU is used. |
+
+Closing the window during a download cancels it.
+
 ### Notifications
 
 Both are off by default.
@@ -1152,6 +1179,7 @@ The servers used by the **Upload to server** step, one tab each. **+ Add server*
   good test also saves the **server key**, which is checked at every later connection: if
   another computer answered at that address, nothing would be sent. After a reset of the NAS
   the key changes, and the app asks whether to accept the new one.
+  It also reads the list of that folder, which travels like a file: a server that accepts the login but cannot transfer anything is reported here, not during the workflow.
 
 To reach the NAS from outside, its port has to be opened on the home router (with a dynamic
 DNS name if your home IP address changes), or you can connect through a VPN (Tailscale,
@@ -1343,6 +1371,8 @@ On Windows, in `%APPDATA%\SequentiaNexus\`:
 | `presets\` | Your presets |
 | `logs\` | The saved logs, if turned on |
 | `ocr\` | The downloaded OCR languages |
+| `stt\` | The speech-to-text models and the NVIDIA libraries |
+| `srt_rules\` | The saved rules of *Correct SRT files* |
 | `requirements.json` | The last requirements check |
 | `license.json` | The license activated on this PC (the activation is protected by Windows) |
 | `steps\` | The steps received from the license server, encrypted |
