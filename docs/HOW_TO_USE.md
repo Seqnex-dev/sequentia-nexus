@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.61.5**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.63.3**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -51,7 +51,7 @@ The app needs some external programs. The first time they are missing, the
 | **mkvmerge** | Merging the final MKV files |
 | **mkvpropedit** | The *Aspect ratio* step |
 | **tesseract** *(optional)* | Only the *Convert image subtitles to SRT* step |
-| **Microsoft Visual C++ Redistributable** *(optional)* | Only the *Transcribe audio to subtitles* step (most PCs already have it) |
+| **Microsoft Visual C++ Redistributable** *(optional)* | Only the *Transcribe audio to subtitles* and *Translate subtitles* steps (most PCs already have it) |
 
 - A green check means the program is ready.
 - **Install** installs a single missing item; **Install all missing** installs all the
@@ -579,7 +579,7 @@ file (`[2/3] Conversion -> ...`).
 
 ### Subtitles
 
-These steps run in this order: OCR → Transcribe → Create missing → Correct → Synchronize. Each one passes
+These steps run in this order: OCR → Transcribe → Translate → Create missing → Correct → Synchronize. Each one passes
 all the subtitles on to the next step, including the ones it does not change.
 
 #### Convert image subtitles to SRT
@@ -612,7 +612,18 @@ The parameters list the videos of the input folder (or of the queue) **without a
 - A voice filter skips music and silence; lines Whisper is unsure of, typical invented phrases ("Thanks for watching") and repeated lines are left out.
 - The lines follow the usual subtitle rules: at most two lines of 42 characters, a new subtitle at the end of a sentence or after a pause, enough time on screen to read it.
 - Only the dialogue is written: no *forced* subtitle (signs on screen) and no sound descriptions.
-- The model is downloaded once in [Preferences → Speech to text](#speech-to-text). With an NVIDIA video card a film takes a few minutes; with the CPU from half an hour to more than an hour.
+- The model is downloaded once in [Preferences → Speech to text and translation](#speech-to-text-and-translation). With an NVIDIA video card a film takes a few minutes; with the CPU from half an hour to more than an hour.
+
+#### Translate subtitles
+
+Creates the subtitle in the language of *Extract audio and subtitles* by translating a text subtitle the video already has in another language (machine translation on the PC, with the MADLAD-400 model). The types the source has (forced, regular, SDH) and the extraction keeps are translated; they then go through *Create missing subtitles*, *Correct SRT files* and *Synchronize subtitles* like the others, and in the final file the track says **(translated)** in its name (for example `Italian regular (translated)`).
+
+The parameters list the videos of the input folder (or of the queue) **without a subtitle in that language but with a text subtitle in another one**, with their length and subtitle languages. Tick the videos to translate, or use **Select all** / **Deselect all**: at the start none is ticked, and the ticks are not saved in presets. **Translate from**: *Automatic* takes English when the video has it, then French, German, Spanish, Italian, Portuguese, then the first other language; *This language* translates only from the one you choose.
+
+- The text is translated by sentence, not line by line: a sentence cut over two or three subtitles is joined first, two sentences in one subtitle are translated one by one, and the two speakers of a dialogue line ("- Yes. - No.") separately. Then the text goes back on the original subtitles, with their times.
+- Italics are kept, signs written in capitals stay in capitals, at most two lines of 42 characters.
+- If a video is also ticked in *Transcribe audio to subtitles*, the transcription comes first and the translation does not replace it.
+- The model is downloaded once in [Preferences → Speech to text and translation](#speech-to-text-and-translation). With an NVIDIA video card a film takes less than a minute; with the CPU a few minutes.
 
 #### Create missing subtitles
 
@@ -949,6 +960,19 @@ uploads included, is over.
 
 Special jobs, outside the usual flow of a workflow.
 
+#### Rename episodes (TMDB)
+
+Gives the episodes of TV series a clean name with the titles from TMDB, instead of names like `Name.Of.The.Series.S02E05.1080p.WEB.x264-GROUP.mkv`. The files with `S01E01`, `S01E01E02` (two episodes) or `1x01` in the name are grouped by series (everything before the episode number; with only `S02E05`, the name of the folder), all the seasons of a series in one group.
+
+- **Series**: for each series press **Search TMDB...**, write the name (and the year, if there are several), and choose the right one from the list with the posters. The program remembers the choice: the next episodes of the same series (a new season) are matched by themselves. A series not matched keeps its names. **Preview the names...** shows every old name next to the new one before the start.
+- **Name template**: `{show}` the series, `{year}` the year, `{season}` the season (`01`), `{episode}` the episode (`05`; two episodes `05-E06`), `{title}` the title of the episode; a button inserts each one, **Ready formats...** has the usual ones, an example below changes as you write. A `/` makes folders in the output folder, as Plex, Jellyfin and Kodi like them: `{show} ({year})/Season {season}/{show} - S{season}E{episode} - {title}`.
+- **Language of the titles**: by default the language of the series audio (the main one chosen in Extraction); tick **Choose the language of the titles** for another one. When TMDB has no title in that language, **Titles missing in the language** writes `Episode 5` (in that language) or the title in another language, episode by episode.
+- **Character for the special characters**: the characters no system accepts in a file name (`\ / : * ? " < > |`) become this one (`_` by default): `Star Trek: Discovery` → `Star Trek_ Discovery`.
+- **When**: the new names are given at the end of the workflow, to the final files and then to the originals in the input folder (only the file name: the folders of the template are for the output). In the meantime every step and every choice made for a file works with the old names. Alone, the step renames the originals.
+- **Files in seed**: turn it on when the originals are shared by a torrent program: renamed, they would no longer be found and shared. On, only the final files get the new name. The program cannot tell by itself (a file in seed is open only while someone downloads it); an original that another program has open is never renamed.
+
+The titles come from TMDB through the Sequentia Nexus server, with an active licence. This product uses the TMDB API but is not endorsed or certified by TMDB.
+
 #### Transfer audio and subtitles
 
 Puts the audio and the subtitles of one version of a film (the **source**: a DVD, a 720p, a TV recording...) onto another version of the same film (the **target**: the 1080p, the 4K...): for example the dubbed language of an old DVD or of a 720p onto a 1080p that has only the original language.
@@ -1130,11 +1154,12 @@ the workflow is stopped or has other errors (for example a failed upload).
 | Tesseract | Where Tesseract was found. Leave *Path* empty unless you installed it in an unusual place. |
 | Parallel OCR processes | See [Speed](#ocr-of-image-subtitles). |
 
-### Speech to text
+### Speech to text and translation
 
 | Setting | |
 |---|---|
 | Model | **large-v3-turbo** (default, about 1.5 GB, fast) or **large-v3** (about 2.9 GB, the most accurate, 3-4 times slower), with **Download** / **Remove**. Whisper models under the MIT licence, from Hugging Face. |
+| Translation model | **MADLAD-400 3B** (about 2.8 GB, about 400 languages), with **Download** / **Remove**: the model of *Translate subtitles*, from Google under the Apache 2.0 licence, from Hugging Face. It uses the same video card and NVIDIA libraries as the transcription. |
 | Transcribe with | *Automatic*: the NVIDIA video card when it is ready, otherwise the CPU; or *The CPU only*. The card is the one chosen in [GPU](#gpu). |
 | NVIDIA libraries | To use the video card the NVIDIA cuBLAS libraries are needed (about 0.5 GB, downloaded from NVIDIA with **Download**, under their licence). Without them the CPU is used. |
 
@@ -1371,7 +1396,7 @@ On Windows, in `%APPDATA%\SequentiaNexus\`:
 | `presets\` | Your presets |
 | `logs\` | The saved logs, if turned on |
 | `ocr\` | The downloaded OCR languages |
-| `stt\` | The speech-to-text models and the NVIDIA libraries |
+| `stt\` | The speech-to-text and translation models and the NVIDIA libraries |
 | `srt_rules\` | The saved rules of *Correct SRT files* |
 | `requirements.json` | The last requirements check |
 | `license.json` | The license activated on this PC (the activation is protected by Windows) |

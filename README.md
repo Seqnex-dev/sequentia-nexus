@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.61.5-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.63.3-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -52,6 +52,11 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   SRT text, with a smart correction that fixes the typical OCR mistakes.
 - **Subtitles from the audio**: a video without subtitles gets one by speech to text
   (Whisper), on the NVIDIA video card or on the CPU.
+- **Episode names from TMDB**: `Name.Of.The.Series.S02E05.1080p.WEB-GROUP` becomes
+  `Name Of The Series - S02E05 - Episode title`, with your own template (folders for Plex,
+  Jellyfin, Kodi too) and the titles in your language.
+- **Subtitle translation**: a subtitle in another language translated on the PC (MADLAD-400),
+  by whole sentences put back on the original timing; the track says "(translated)".
 - **Fix the subtitles**: clean tags and encoding errors, create a missing *regular* or
   *forced* subtitle, resync the timing, and add your own find-and-replace rules with a live
   preview on the real subtitles of your videos; save the rules and load them in other
