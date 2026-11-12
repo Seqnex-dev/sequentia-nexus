@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.63.3-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.66.4-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -67,7 +67,7 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
 - **Encode preview**: a piece of a video encoded with your settings, with the size and time
   expected for the whole video, the quality (VMAF) and a frame to compare with the original.
 - **Clean up the picture** before the encode: automatic deinterlacing (only when the video
-  needs it, also NTSC telecine), black bars cropped, noise reduction for old DVDs.
+  needs it, also NTSC telecine), black bars cropped, grain reduction for old DVDs.
 - **3D → 2D**: a 3D video (side by side or top and bottom) is recognised from its flag, its
   name and above all its picture, and comes out in 2D; a Blu-ray 3D gives the film in 2D.
 - **Resolution and quality**: a maximum resolution (a 4K film becomes 1080p, never enlarged;

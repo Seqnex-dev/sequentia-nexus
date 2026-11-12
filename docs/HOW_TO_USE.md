@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.63.3**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.66.4**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -720,11 +720,11 @@ not converted again.
 | Two passes | x264 / x265 with a bitrate: **on** by default. See below. |
 | NVENC preset / CPU preset | Speed against quality. |
 | Bit depth | 8 or 10 bit. |
-| Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, noise](#picture-deinterlace-black-bars-noise) below. |
-| 3D → 2D | **Automatic** (default), Off, or always side by side / top and bottom: a 3D video becomes 2D. See [Picture](#picture-deinterlace-black-bars-noise). |
+| Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, grain](#picture-deinterlace-black-bars-grain) below. |
+| 3D → 2D | **Automatic** (default), Off, or always side by side / top and bottom: a 3D video becomes 2D. See [Picture](#picture-deinterlace-black-bars-grain). |
 | Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
 | Maximum resolution | **Same as source** (default), 2160p, 1440p, 1080p, 720p, 576p or 480p. See below. |
-| Noise reduction | Off (default), Light, Medium or Strong (see below). |
+| Picture grain reduction | Off (default), Light, Medium or Strong (see below). |
 | HDR | **Automatic** (default) or Always convert to SDR. See [HDR videos](#hdr-videos) below. |
 | Preview | **Encode preview...**: encodes a piece of a video with these settings and tells size, time and quality. See [Encode preview](#encode-preview) below. |
 | Include forced / regular / SDH subtitles | Which subtitles go into the final file (hidden with the hardsub). |
@@ -749,7 +749,7 @@ disconnected?): trying again in 15 s`. The same happens when *Merge* moves the f
 
 The attachments of the original (fonts, cover) are kept in the final file, as with *Merge*.
 
-##### Picture: deinterlace, black bars, noise
+##### Picture: deinterlace, black bars, grain
 
 Before encoding a video the step looks at six short pieces of it (a few seconds in all, spread
 over the film) and prepares the picture. The log says what it found for every video.
@@ -772,7 +772,7 @@ over the film) and prepares the picture. The log says what it found for every vi
   picture (a very dark video), nothing is cut. With the hardsub of an **image** subtitle
   (Blu-ray, DVD) the bars are kept, because those subtitles may sit in them; a burned SRT or ASS
   is drawn inside the cropped picture.
-- **Noise reduction** (off by default): removes the grain and noise of old videos (DVD, VHS), so
+- **Picture grain reduction** (off by default): removes the grain and noise of old videos (DVD, VHS), so
   the bits go to the picture, not to the noise. *Light* for good DVDs, *Medium* for grainy ones,
   *Strong* only for badly damaged sources, because it also removes fine detail. The same levels
   as HandBrake; the CPU does it, so the encode is a little slower.
@@ -795,7 +795,7 @@ picture.
   (`Resolution: 3840x1600 -> 1920x800 (limit 1080p)`). A smaller video is never enlarged
   (`Resolution: 720x576, within 1080p: kept`). A DVD, whose pixels are wide, comes out with square
   pixels when it is shrunk (720x576 at 480p becomes 854x480). With an NVIDIA card, when nothing
-  else changes the picture (no deinterlace, crop, tone mapping, noise reduction or hardsub), the
+  else changes the picture (no deinterlace, crop, tone mapping, grain reduction or hardsub), the
   card decodes, resizes and encodes without the frames ever leaving it (`Resize on the video
   card`): faster, and the CPU stays free for the audio. A burned image subtitle follows the new
   size.
@@ -844,7 +844,7 @@ settings of the step, to choose the bitrate before starting a whole series:
   of that section), the **start** (*Automatic*: the middle of the video, where there is usually
   action and not the titles; or a time) and the **length** (10, 30 or 60 seconds);
 - **Create preview** encodes the piece with the same codec, bitrate, video card, deinterlace,
-  black bars and noise reduction of the step (video only: the hardsub and the audio are not in
+  black bars and grain reduction of the step (video only: the hardsub and the audio are not in
   the preview);
 - the result tells the **size of the whole video** (video only), the **speed** of the encode and
   the **time** for the whole video, the picture size when the black bars are cropped and, with
@@ -964,6 +964,8 @@ Special jobs, outside the usual flow of a workflow.
 
 Gives the episodes of TV series a clean name with the titles from TMDB, instead of names like `Name.Of.The.Series.S02E05.1080p.WEB.x264-GROUP.mkv`. The files with `S01E01`, `S01E01E02` (two episodes) or `1x01` in the name are grouped by series (everything before the episode number; with only `S02E05`, the name of the folder), all the seasons of a series in one group.
 
+**Files with only the title** (`Tabula rasa.mkv`, without `S01E01`): the files of one folder make one group, named after the folder. Once the series is chosen with **Search TMDB...**, season and episode of every file are found from its title, compared with the titles of every season (in the language of the titles, the fallback one and English; capitals, accents, apostrophes and technical words such as `1080p` do not count). A file with two titles in a row is a double episode (`S04E01-E02`). A title not found, or close to two episodes, is not renamed (red in the preview), and the preview lists at the bottom the episodes of those seasons that have no file.
+
 - **Series**: for each series press **Search TMDB...**, write the name (and the year, if there are several), and choose the right one from the list with the posters. The program remembers the choice: the next episodes of the same series (a new season) are matched by themselves. A series not matched keeps its names. **Preview the names...** shows every old name next to the new one before the start.
 - **Name template**: `{show}` the series, `{year}` the year, `{season}` the season (`01`), `{episode}` the episode (`05`; two episodes `05-E06`), `{title}` the title of the episode; a button inserts each one, **Ready formats...** has the usual ones, an example below changes as you write. A `/` makes folders in the output folder, as Plex, Jellyfin and Kodi like them: `{show} ({year})/Season {season}/{show} - S{season}E{episode} - {title}`.
 - **Language of the titles**: by default the language of the series audio (the main one chosen in Extraction); tick **Choose the language of the titles** for another one. When TMDB has no title in that language, **Titles missing in the language** writes `Episode 5` (in that language) or the title in another language, episode by episode.
@@ -971,7 +973,7 @@ Gives the episodes of TV series a clean name with the titles from TMDB, instead 
 - **When**: the new names are given at the end of the workflow, to the final files and then to the originals in the input folder (only the file name: the folders of the template are for the output). In the meantime every step and every choice made for a file works with the old names. Alone, the step renames the originals.
 - **Files in seed**: turn it on when the originals are shared by a torrent program: renamed, they would no longer be found and shared. On, only the final files get the new name. The program cannot tell by itself (a file in seed is open only while someone downloads it); an original that another program has open is never renamed.
 
-The titles come from TMDB through the Sequentia Nexus server, with an active licence. This product uses the TMDB API but is not endorsed or certified by TMDB.
+The titles come from TMDB through the Sequentia Nexus server, with an active licence. Titles just added on TMDB are seen at once; a title changed there can take up to an hour. This product uses the TMDB API but is not endorsed or certified by TMDB.
 
 #### Transfer audio and subtitles
 
@@ -988,6 +990,11 @@ Puts the audio and the subtitles of one version of a film (the **source**: a DVD
   23.976; also 24 / 23.976), delay, and cuts: where the two versions differ (a scene more in the
   source or in the target), the audio gets silence or leaves the scene out, and the subtitles
   follow. The log tells the speed, the delay, every cut and how well the two films match.
+  When the two audio tracks share too little sound (a dub mixed differently from the original) or
+  the audio finds small steps, and the source is a video file, the **pictures** of the two videos
+  are compared too: they are the same in every language. Where the pictures and the audio
+  disagree the pictures decide; where they agree the audio makes the delay exact to the
+  millisecond. Reading the two videos takes a few minutes more.
 - **Subtitles**: the ones in the subtitle language are fitted to the target as they are: text as
   SRT, pictures (DVD VobSub, Blu-ray PGS) as pictures; a subtitle in a scene the target has not is
   left out. **Convert image subtitles to SRT** (off) turns the pictures into SRT with the step
