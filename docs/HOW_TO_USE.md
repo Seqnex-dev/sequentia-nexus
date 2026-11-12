@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.66.4**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.66.6**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
