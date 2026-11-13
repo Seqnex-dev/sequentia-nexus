@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.66.6**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.68.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -960,6 +960,19 @@ uploads included, is over.
 
 Special jobs, outside the usual flow of a workflow.
 
+#### Split double episode
+
+Splits a file with two or more episodes joined (`S04E01-E02`, `S04E01E02`, `4x01-02` in the name) into one file per episode. Only a few seconds around each cut are encoded again: the rest of the video (H.264 or H.265) is copied as it is, AC3, E-AC3 and DTS audio keeps its frames, lossless audio stays lossless (FLAC), every subtitle track follows. The new files get the code of their episode (`S04E01`, `S04E02`) and, when the name has as many titles as episodes (`Title A & Title B`), one each; **Rename episodes (TMDB)** can then give them the real titles. The next steps of the workflow work on the split episodes.
+
+Before the start press **Prepare the split...** in the parameters (the choices are for those files and are not saved in the preset). The window analyses each file in about a minute, comparing it with the other episodes of the series in the same folder:
+
+- **Where each episode starts**: from the chapters, from the end credits or the opening theme found near the middle, at a fade to black with silence or at a shot change; the other points found are in the menu, and a time can be written by hand.
+- **Opening theme and end credits**: found from the sound in common with the other episodes, or from the chapters; without other episodes in the folder, write where they start and end.
+- **Add the end credits** to an episode that has none (taken from the end of the file, silent from their fade to black until their music starts) and **Add the opening theme** to an episode that has none, where it is in episode 1: at the start, or after a first scene about as long (at a fade to black, or at a quiet shot change without subtitles).
+- **Cuts**: every join, with a preview of 2.5 s before and after it, **Without fade** or **With fade** (the advised one is already chosen); **Play with sound** opens the clip in the player of the PC.
+
+A video that cannot be encoded again like its source (Dolby Vision, MPEG-2, VC-1, AV1, interlaced) is cut only at its key pictures, without black or fades: the check before the start says so. The double file counts as an original: it is deleted (when asked in the Preferences) only when every episode has its final file.
+
 #### Rename episodes (TMDB)
 
 Gives the episodes of TV series a clean name with the titles from TMDB, instead of names like `Name.Of.The.Series.S02E05.1080p.WEB.x264-GROUP.mkv`. The files with `S01E01`, `S01E01E02` (two episodes) or `1x01` in the name are grouped by series (everything before the episode number; with only `S02E05`, the name of the folder), all the seasons of a series in one group.
@@ -971,6 +984,7 @@ Gives the episodes of TV series a clean name with the titles from TMDB, instead 
 - **Language of the titles**: by default the language of the series audio (the main one chosen in Extraction); tick **Choose the language of the titles** for another one. When TMDB has no title in that language, **Titles missing in the language** writes `Episode 5` (in that language) or the title in another language, episode by episode.
 - **Character for the special characters**: the characters no system accepts in a file name (`\ / : * ? " < > |`) become this one (`_` by default): `Star Trek: Discovery` → `Star Trek_ Discovery`.
 - **When**: the new names are given at the end of the workflow, to the final files and then to the originals in the input folder (only the file name: the folders of the template are for the output). In the meantime every step and every choice made for a file works with the old names. Alone, the step renames the originals.
+- **Write the parts of episodes the same way** (on by default): TMDB writes an episode split into parts in many ways (`Pt 1`, `Parte 1`, `(Part One)`, `(1)`); on, the part at the end of the title always becomes `(Part 1)`, `(Part 2)`... in the language of the titles, and a file with two parts in a row becomes `Title (Parts 1 and 2)`. A number without brackets and without the word *part* stays as it is (`Rocky 2`). A TMDB title that already holds two parts (`Part I & Part II`, `Exodus - Part 2 / Exodus - Part 3`) is written the same way.
 - **Files in seed**: turn it on when the originals are shared by a torrent program: renamed, they would no longer be found and shared. On, only the final files get the new name. The program cannot tell by itself (a file in seed is open only while someone downloads it); an original that another program has open is never renamed.
 
 The titles come from TMDB through the Sequentia Nexus server, with an active licence. Titles just added on TMDB are seen at once; a title changed there can take up to an hour. This product uses the TMDB API but is not endorsed or certified by TMDB.
@@ -1014,14 +1028,14 @@ Puts the audio and the subtitles of one version of a film (the **source**: a DVD
   *Cut the scenes* rebuilds the shorter version: the scenes are taken out of the video, the audio, the
   subtitles and the chapters follow, and the original audio is cut the same way. Each cut is moved to
   the nearest shot change (within 0.6 s), where it is not seen; only a few seconds around each cut are
-  encoded again, the rest of the video is copied as it is (H.264 video; other formats stay whole, in
+  encoded again, the rest of the video is copied as it is (H.264 / H.265 video; other formats stay whole, in
   the original language, and the log says so). The work folder needs room for two copies of the film.
   *Silence* keeps the extended version with silence in those scenes. Differences of a few frames
   between two editions are always silent.
 - **Fade at the cuts** (with *Cut the scenes*, *Automatic*): a short fade to black and back, of
   picture and sound, only where there is no shot change near the cut (a dialogue shortened inside the
   same shot); *Always* or *Never*. The log tells, for every cut, where it is and how it was made.
-- **Review cuts** (with *Fade at the cuts* set to *I choose after the workflow*): no fade is made during the workflow; at the end the log says which films have cuts to review, and **Tools → Review cuts** lists every cut: where it is, how long the scene taken out was and whether it fell on a shot change. A preview plays the seconds around the cut without or with the fade, and the advised fades are already ticked. **Apply fades** adds the ticked fades to the final file, encoding again only the seconds around each cut (the AC3 / E-AC3 sound only around the cut, FLAC without loss). It works with H.264 videos. The cuts made with the other choices are listed too, so a fade can still be added where there was none.
+- **Review cuts** (with *Fade at the cuts* set to *I choose after the workflow*): no fade is made during the workflow; at the end the log says which films have cuts to review, and **Tools → Review cuts** lists every cut: where it is, how long the scene taken out was and whether it fell on a shot change. A preview plays the seconds around the cut without or with the fade, and the advised fades are already ticked. **Apply fades** adds the ticked fades to the final file, encoding again only the seconds around each cut (the AC3 / E-AC3 sound only around the cut, FLAC without loss). It works with H.264 / H.265 videos. The cuts made with the other choices are listed too, so a fade can still be added where there was none.
 - The files get the names of the target videos, so **Audio settings**, the **OCR**, **Correct SRT
   files** and **Merge** / **Encode** work on them together with the normal videos of the input
   folder. The step comes after *Extract audio and subtitles*.

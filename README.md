@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.66.6-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.68.1-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -55,6 +55,9 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
 - **Episode names from TMDB**: `Name.Of.The.Series.S02E05.1080p.WEB-GROUP` becomes
   `Name Of The Series - S02E05 - Episode title`, with your own template (folders for Plex,
   Jellyfin, Kodi too) and the titles in your language.
+- **Double episodes split**: `S04E01-E02` becomes two files, re-encoding only a few seconds
+  around the cuts; the opening theme and the end credits are found from the other episodes
+  and copied where they are missing, every cut previewed with and without a fade.
 - **Subtitle translation**: a subtitle in another language translated on the PC (MADLAD-400),
   by whole sentences put back on the original timing; the track says "(translated)".
 - **Fix the subtitles**: clean tags and encoding errors, create a missing *regular* or
