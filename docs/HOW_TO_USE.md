@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.68.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.70.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -616,7 +616,7 @@ The parameters list the videos of the input folder (or of the queue) **without a
 
 #### Translate subtitles
 
-Creates the subtitle in the language of *Extract audio and subtitles* by translating a text subtitle the video already has in another language (machine translation on the PC, with the MADLAD-400 model). The types the source has (forced, regular, SDH) and the extraction keeps are translated; they then go through *Create missing subtitles*, *Correct SRT files* and *Synchronize subtitles* like the others, and in the final file the track says **(translated)** in its name (for example `Italian regular (translated)`).
+Creates the subtitle in the language of *Extract audio and subtitles* by translating a text subtitle the video already has in another language (machine translation on the PC with the MADLAD-400 model, or with DeepL and your key). The types the source has (forced, regular, SDH) and the extraction keeps are translated; they then go through *Create missing subtitles*, *Correct SRT files* and *Synchronize subtitles* like the others, and in the final file the track says **(translated)** in its name (for example `Italian regular (translated)`).
 
 The parameters list the videos of the input folder (or of the queue) **without a subtitle in that language but with a text subtitle in another one**, with their length and subtitle languages. Tick the videos to translate, or use **Select all** / **Deselect all**: at the start none is ticked, and the ticks are not saved in presets. **Translate from**: *Automatic* takes English when the video has it, then French, German, Spanish, Italian, Portuguese, then the first other language; *This language* translates only from the one you choose.
 
@@ -624,6 +624,10 @@ The parameters list the videos of the input folder (or of the queue) **without a
 - Italics are kept, signs written in capitals stay in capitals, at most two lines of 42 characters.
 - If a video is also ticked in *Transcribe audio to subtitles*, the transcription comes first and the translation does not replace it.
 - The model is downloaded once in [Preferences → Speech to text and translation](#speech-to-text-and-translation). With an NVIDIA video card a film takes less than a minute; with the CPU a few minutes.
+
+**Adapt to the dub** (on by default): when the video also has the audio in the language of the translation (a dubbed film), the program listens to the dub (with the transcription model) and, sentence by sentence, the regular subtitle says what the dub says: more natural, with the names and the forms of address of the actors, exactly what is heard. Where the dub says something else than the original, the dub wins (the log lists some of these sentences); where it is not heard well, the translation stays. The forced subtitle (signs, invented languages) and the SDH (sounds) stay translated. It adds about a minute and a half per episode with the video card. Invented names are written as in the source subtitle.
+
+**Translator**: *On the PC (MADLAD-400)* (default) is free and works without internet. *DeepL (your key)* usually gives a more natural translation: it uses your own DeepL API key (the Free plan translates 500,000 characters a month, about 15-20 films), saved in [Preferences → Speech to text and translation](#speech-to-text-and-translation); the text of the subtitles is sent to DeepL, with the sentences around as context. If DeepL cannot go on (key refused, characters of the month used up, no connection), the model of the PC takes over when it is downloaded. *Adapt to the dub* works with both.
 
 #### Create missing subtitles
 
@@ -667,8 +671,16 @@ writing is kept; lines without letters, such as `1985`, stay too.
 
 #### Correct SRT files
 
-Cleans the subtitles automatically: HTML and ASS tags, apostrophes used as accents (`e'` → `è`,
-`perchè` → `perché`), encoding errors (`Ã¨` → `è`), credits at the end, common Italian typos.
+Cleans the subtitles automatically: encoding errors (`Ã¨` → `è`), HTML and ASS tags, credits at
+the end, typographic quotes and double spaces and, only on Italian subtitles (the subtitle language
+of Extraction), the apostrophes used as accents (`e'` → `è`, `perchè` → `perché`). Each of these
+corrections can be turned off in the advanced settings.
+
+- **Minimum duration of the lines** and **Maximum reading speed** (off by default; 1 s and 20
+  characters a second are advised): a line shown too briefly stays on screen longer, never up to the
+  next one. Useful with subtitles from the OCR or the transcription.
+- **Join two short lines**: the two lines of a subtitle become one when together they fit in 42
+  characters; the lines of a dialogue, with a dash in front, stay apart.
 
 Tick **Custom rules** and press **Edit rules...** to add your own: see
 [Custom rules](#custom-rules).
@@ -1181,6 +1193,7 @@ the workflow is stopped or has other errors (for example a failed upload).
 |---|---|
 | Model | **large-v3-turbo** (default, about 1.5 GB, fast) or **large-v3** (about 2.9 GB, the most accurate, 3-4 times slower), with **Download** / **Remove**. Whisper models under the MIT licence, from Hugging Face. |
 | Translation model | **MADLAD-400 3B** (about 2.8 GB, about 400 languages), with **Download** / **Remove**: the model of *Translate subtitles*, from Google under the Apache 2.0 licence, from Hugging Face. It uses the same video card and NVIDIA libraries as the transcription. |
+| DeepL | Your DeepL **API key** (from deepl.com, API account; Free or Pro), with **Save and check** / **Remove**. Checked with DeepL before it is saved, then kept in the system's credential store, never in the program's files; the page shows the characters used this month. Used by *Translate subtitles* with *DeepL (your key)*. |
 | Transcribe with | *Automatic*: the NVIDIA video card when it is ready, otherwise the CPU; or *The CPU only*. The card is the one chosen in [GPU](#gpu). |
 | NVIDIA libraries | To use the video card the NVIDIA cuBLAS libraries are needed (about 0.5 GB, downloaded from NVIDIA with **Download**, under their licence). Without them the CPU is used. |
 
