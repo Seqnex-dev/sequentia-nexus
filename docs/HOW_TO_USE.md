@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.70.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.73.2**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -725,9 +725,11 @@ not converted again.
 | Setting | |
 |---|---|
 | Video codec | H.264 or H.265, on an NVIDIA GPU (**NVENC**, fast) or on the CPU (x264 / x265). The NVENC codecs are listed only if a card passed the NVENC test (see [GPU](#gpu)). |
-| Quality control | x264 / x265 only: **Bitrate** (default, predictable size) or **Constant quality (CRF)**. See [Resolution and quality](#resolution-and-quality) below. |
+| Rate control | NVENC only: **Automatic (VMAF)**, **VBR** (default, the bitrate below), **CBR** or **VBR constant quality (CQ)**. |
+| Quality control | x264 / x265 only: **Automatic (VMAF)**, **Bitrate** (default, predictable size) or **Constant quality (CRF)**. See [Resolution and quality](#resolution-and-quality) below. |
+| Quality (VMAF) | With *Automatic (VMAF)*: **Visually identical (97)** (default), **High (95)**, **Good (93)** or **Medium (90)**. See below. |
 | CRF | With *Constant quality (CRF)*: **Automatic** (default, by the resolution that comes out) or a value from 14 to 30. |
-| Video bitrate | **Required**: there is no default, you have to enter it (for example `4000` = 4000 kbit/s). Not needed with NVENC in *VBR constant quality (CQ)*, or with x264 / x265 in *Constant quality (CRF)*. |
+| Video bitrate | With *VBR* / *CBR* (NVENC) or *Bitrate* (x264 / x265) it is **required**: there is no default, you have to enter it (for example `4000` = 4000 kbit/s). Hidden with *Automatic (VMAF)*, where the program chooses it, and not used with *CQ* or *CRF*. |
 | Not above the original bitrate | Off by default. When the original video has a lower bitrate than the chosen one, the encode uses the original one: a video downloaded from the web at 1100 kbit/s encoded at 2600k only becomes twice as big, with no gain in quality. The log says which bitrate is used, for example `Original video at 1135 kbit/s, below 2600k: 1135k is used`. With an H.265 original the same bitrate in H.264 is a little less sharp. Not used with CQ or CRF. |
 | Two passes | x264 / x265 with a bitrate: **on** by default. See below. |
 | NVENC preset / CPU preset | Speed against quality. |
@@ -744,7 +746,7 @@ not converted again.
 | Subtitle to burn | Forced, regular or SDH: only the types enabled in *Extract audio and subtitles*. |
 | Existing files behavior | Overwrite, skip, or stop with an error when the final file already exists. |
 | Keep chapters from original | Off by default. Copies the chapters of the original video (e.g. opening, episode, ending), as in *Merge*. |
-| *Advanced* | Rate control, CQ values, AQ, lookahead, multipass, frame rate; the style of a burned SRT (font, size, colour, black outline). |
+| *Advanced* | CQ values, AQ, lookahead, multipass, frame rate; the style of a burned SRT (font, size, colour, black outline). |
 
 Which card does the encode, or whether two cards encode two videos at the same time, is chosen
 in **Preferences → GPU**. There you also find two options, on by default, that make the
@@ -811,6 +813,7 @@ picture.
   card decodes, resizes and encodes without the frames ever leaving it (`Resize on the video
   card`): faster, and the CPU stays free for the audio. A burned image subtitle follows the new
   size.
+- **Automatic quality (VMAF)**, with *Rate control* (NVENC) or *Quality control* (x264 / x265) on *Automatic (VMAF)*: for every video the program takes six pieces of 8 seconds spread over it, with the same deinterlace, crop, resolution and tone mapping as the encode, encodes them at a few bitrates with the step's settings and compares them with the original using **VMAF** (0-100, the measure of picture quality made by Netflix). It keeps the lowest bitrate whose mean reaches the chosen level, with the hardest piece no more than 3 points below, and encodes the whole video at that bitrate (VBR, or two passes with x264 / x265). The next episode starts from the bitrate of the one before, so the search gets shorter. It takes about 1-2 minutes per video; the log shows every try and the result: `Automatic quality: 4200k (VMAF 97.1, hardest piece 95.6)`. The bitrate never goes far above the original's (at most 3.5 times for an H.265 original, 1.5 for H.264, the original's own with *Not above the original bitrate*): when the level cannot be reached, for an original with a lot of grain or already heavily compressed, the program uses the lowest bitrate near the best quality possible and says so. Measured on an H.265 10-bit 1080p web series (video at 2200 kbit/s) to H.264 NVENC: VMAF 97 between 4200k and 7700k depending on the episode, and on parts of the finished file that the search had not tried VMAF 96.9 and 97.0. The [Encode preview](#encode-preview) shows the bitrate found.
 - **Constant quality (CRF)**, for x264 and x265: every scene gets the bits it needs for the same
   quality, so easy scenes cost little and hard ones more; the size is not known in advance (the
   [Encode preview](#encode-preview) estimates it). *Automatic* uses the values of HandBrake's
@@ -997,6 +1000,7 @@ Gives the episodes of TV series a clean name with the titles from TMDB, instead 
 - **Character for the special characters**: the characters no system accepts in a file name (`\ / : * ? " < > |`) become this one (`_` by default): `Star Trek: Discovery` → `Star Trek_ Discovery`.
 - **When**: the new names are given at the end of the workflow, to the final files and then to the originals in the input folder (only the file name: the folders of the template are for the output). In the meantime every step and every choice made for a file works with the old names. Alone, the step renames the originals.
 - **Write the parts of episodes the same way** (on by default): TMDB writes an episode split into parts in many ways (`Pt 1`, `Parte 1`, `(Part One)`, `(1)`); on, the part at the end of the title always becomes `(Part 1)`, `(Part 2)`... in the language of the titles, and a file with two parts in a row becomes `Title (Parts 1 and 2)`. A number without brackets and without the word *part* stays as it is (`Rocky 2`). A TMDB title that already holds two parts (`Part I & Part II`, `Exodus - Part 2 / Exodus - Part 3`) is written the same way.
+- **Numbering**: some series are numbered differently on TMDB and in the files, for example a season of 16 episodes that Netflix released as two seasons of 8. Under a matched series that has other orders on TMDB (*episode groups*: DVD, digital, production...) the **Numbering** menu chooses between the TMDB seasons and those orders. When the files do not fit the TMDB seasons but fit one of the orders, the program chooses it by itself and says so; a numbering that does not fit the files is shown in orange. The choice is remembered with the series. With an order chosen, **New names with** gives the new names the numbering of the files or the main numbering of TMDB (for Plex and Jellyfin, which follow it): the file `S02E01` becomes `S01E09`, with an example under the menu. When a title of the TMDB seasons is still missing (`Episode 9`), it is taken from the episode groups when they have it: TMDB updates its seasons for programs some hours after a change on the site, the groups at once.
 - **Files in seed**: turn it on when the originals are shared by a torrent program: renamed, they would no longer be found and shared. On, only the final files get the new name. The program cannot tell by itself (a file in seed is open only while someone downloads it); an original that another program has open is never renamed.
 
 The titles come from TMDB through the Sequentia Nexus server, with an active licence. Titles just added on TMDB are seen at once; a title changed there can take up to an hour. This product uses the TMDB API but is not endorsed or certified by TMDB.
@@ -1129,6 +1133,8 @@ Typos that were already in the original subtitle are kept.
 
 On the test files: a DVD 40 lines out of 40, an English Blu-ray 29 out of 30, a TV series about
 99.5%. Italic text is the hardest part: a quick look at the result is always a good idea.
+
+**Other languages** (0.71.1). The correction also knows the letters and marks of every language of the program: the Romanian ș and ț (not the Turkish ş and ţ), the Turkish ı and İ (and no dotless ı in the other languages), the Spanish ¡ and ¿, the Russian dots read as ‚, Chinese without spaces between the characters and with full-width punctuation. Measured on 3,000 test subtitles in 10 languages (Blu-ray and DVD, seven fonts, italics, yellow text): 90% read without a single mistake, against 79% before; in Chinese 70% against 0%.
 
 **Speed.** The OCR uses one CPU core per process. In **Preferences → Subtitles / OCR → Speed**
 choose how many processes run together: *Automatic* uses all the cores but one, at most 8. If
