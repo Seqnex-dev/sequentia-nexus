@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.73.2**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.73.9**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -992,7 +992,7 @@ A video that cannot be encoded again like its source (Dolby Vision, MPEG-2, VC-1
 
 Gives the episodes of TV series a clean name with the titles from TMDB, instead of names like `Name.Of.The.Series.S02E05.1080p.WEB.x264-GROUP.mkv`. The files with `S01E01`, `S01E01E02` (two episodes) or `1x01` in the name are grouped by series (everything before the episode number; with only `S02E05`, the name of the folder), all the seasons of a series in one group.
 
-**Files with only the title** (`Tabula rasa.mkv`, without `S01E01`): the files of one folder make one group, named after the folder. Once the series is chosen with **Search TMDB...**, season and episode of every file are found from its title, compared with the titles of every season (in the language of the titles, the fallback one and English; capitals, accents, apostrophes and technical words such as `1080p` do not count). A file with two titles in a row is a double episode (`S04E01-E02`). A title not found, or close to two episodes, is not renamed (red in the preview), and the preview lists at the bottom the episodes of those seasons that have no file.
+**Files with only the title** (`Tabula rasa.mkv`, without `S01E01`): the files of one folder make one group, named after the folder. Once the series is chosen with **Search TMDB...**, season and episode of every file are found from its title, compared with the titles of every season (in the language of the titles, the fallback one and English; capitals, accents, apostrophes and technical words such as `1080p` do not count). A file with two titles in a row is a double episode (`S04E01-E02`). A title not found, or close to two episodes, is not renamed (red in the preview), and the preview lists at the bottom the episodes of those seasons that have no file. The folder is not remembered (the next files put in it can be another series), but the series is remembered under its TMDB names: a later season with the name in the files (`I.Woke.Up.A.Vampire.S03E01`) is matched by itself. With another order chosen in **Numbering** (for example *Netflix Seasons*), the titles are looked for in that order and the files take its numbering (the first episode of the second Netflix season becomes `S02E01`).
 
 - **Series**: for each series press **Search TMDB...**, write the name (and the year, if there are several), and choose the right one from the list with the posters. The program remembers the choice: the next episodes of the same series (a new season) are matched by themselves. A series not matched keeps its names. **Preview the names...** shows every old name next to the new one before the start.
 - **Name template**: `{show}` the series, `{year}` the year, `{season}` the season (`01`), `{episode}` the episode (`05`; two episodes `05-E06`), `{title}` the title of the episode; a button inserts each one, **Ready formats...** has the usual ones, an example below changes as you write. A `/` makes folders in the output folder, as Plex, Jellyfin and Kodi like them: `{show} ({year})/Season {season}/{show} - S{season}E{episode} - {title}`.
