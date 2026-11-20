@@ -1,11 +1,11 @@
 Sequentia Nexus - beta terms
 
-Copyright (c) 2026 Seqnex. All rights reserved.
+Copyright (c) 2026 SeqNex. All rights reserved.
 
 Sequentia Nexus is in beta. These terms apply to the beta versions.
 
 1. Licence. The program runs with a personal licence key, free of charge,
-   given by Seqnex or obtained at https://sequentianexus.com/beta. A key works
+   given by SeqNex or obtained at https://sequentianexus.com/beta. A key works
    on one PC at a time and is for your own use: do not share, sell or publish
    it.
 
@@ -13,13 +13,13 @@ Sequentia Nexus is in beta. These terms apply to the beta versions.
    decompile, disassemble or modify the program, or try to get around the
    licence check. The steps carry marks of the licence they were sent to.
 
-3. Revocation. Seqnex may revoke any beta licence at any time, in particular
+3. Revocation. SeqNex may revoke any beta licence at any time, in particular
    at the end of the beta or when these terms are not respected. Abuse of the
    beta page (for example many requests in a short time) bans the connection
    for life and revokes at once every key it received.
 
 4. No warranty. The program is provided "as is", without any warranty. It is
-   beta software: keep copies of the videos you work on. Seqnex is not liable
+   beta software: keep copies of the videos you work on. SeqNex is not liable
    for any loss of data or other damage arising from its use, to the extent
    permitted by law.
 

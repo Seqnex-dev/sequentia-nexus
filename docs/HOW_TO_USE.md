@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.76.6**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.76.7**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -739,6 +739,7 @@ not converted again.
 | Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
 | Maximum resolution | **Same as source** (default), 2160p, 1440p, 1080p, 720p, 576p or 480p. See below. |
 | Picture grain reduction | Off (default), Light, Medium or Strong (see below). |
+| Sharpening | Off (default), Light, Medium or Strong (see below). |
 | HDR | **Automatic** (default) or Always convert to SDR. See [HDR videos](#hdr-videos) below. |
 | Preview | **Encode preview...**: encodes a piece of a video with these settings and tells size, time and quality. See [Encode preview](#encode-preview) below. |
 | Include forced / regular / SDH subtitles | Which subtitles go into the final file (hidden with the hardsub). |
@@ -790,6 +791,12 @@ over the film) and prepares the picture. The log says what it found for every vi
   the bits go to the picture, not to the noise. *Light* for good DVDs, *Medium* for grainy ones,
   *Strong* only for badly damaged sources, because it also removes fine detail. The same levels
   as HandBrake; the CPU does it, so the encode is a little slower.
+- **Sharpening** (off by default): makes a soft picture sharper (DVDs, downscaled videos, old
+  recordings). It works on the brightness only, so the edges get no colour fringes, and it
+  strengthens weak edges more than sharp ones, with fewer halos than a classic filter. *Light* for
+  a touch, *Medium* for a soft DVD, *Strong* only for a very blurry picture, because it also brings
+  out the grain. With the grain reduction it comes after it. A sharper picture needs a few more
+  bits for the same quality; the automatic quality takes it into account.
 - **3D → 2D** (Automatic by default). A 3D video has the two eyes side by side (SBS) or one
   above the other (top and bottom, TAB / OU): on a normal TV it looks double. The step
   recognises it from the 3D flag of the file, from the name (`3D`, `HSBS`, `Half-OU`...) and
