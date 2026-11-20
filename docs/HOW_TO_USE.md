@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.76.3**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.76.6**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -609,14 +609,14 @@ Creates the subtitle of the videos that have none in the language of *Extract au
 The parameters list the videos of the input folder (or of the queue) **without a subtitle in that language**, with their length and audio languages. Tick the videos to transcribe, or use **Select all** / **Deselect all**: at the start none is ticked, and the ticks are not saved in presets. A video whose subtitle in the language is an **image** (DVD, Blu-ray) is listed, in orange, only when the workflow has no OCR: the OCR reads the real subtitle of the disc, more accurate than a transcription, and **Add the OCR to the workflow** adds that step with one click. The check before the start warns when no video is ticked or a ticked video has an image subtitle.
 
 - The audio track used is the one in the language of the workflow (not a commentary), or a track without a language.
-- A voice filter skips music and silence; lines Whisper is unsure of, typical invented phrases ("Thanks for watching") and repeated lines are left out.
+- The audio is heard twice: first all of it, then, with a voice filter, the parts where nothing was heard (Whisper alone sometimes skips speech with music under it); lines Whisper is unsure of, typical invented phrases ("Thanks for watching") and repeated lines are left out. Lines in another language, such as a song a dub left in the original language, are left out too (checked on the sound, not only on the words); in Italian, accents written with an apostrophe ("E'") become real accents ("È").
 - The lines follow the usual subtitle rules: at most two lines of 42 characters, a new subtitle at the end of a sentence or after a pause, enough time on screen to read it.
 - Only the dialogue is written: no *forced* subtitle (signs on screen) and no sound descriptions.
 - The model is downloaded once in [Preferences → Speech to text and translation](#speech-to-text-and-translation). With an NVIDIA video card a film takes a few minutes; with the CPU from half an hour to more than an hour.
 
 #### Translate subtitles
 
-Creates the subtitle in the language of *Extract audio and subtitles* by translating a text subtitle the video already has in another language (machine translation on the PC with the MADLAD-400 model, or with DeepL and your key). The types the source has (forced, regular, SDH) and the extraction keeps are translated; they then go through *Create missing subtitles*, *Correct SRT files* and *Synchronize subtitles* like the others, and in the final file the track says **(translated)** in its name (for example `Italian regular (translated)`).
+Creates the subtitle in the language of *Extract audio and subtitles* by translating a text subtitle the video already has in another language (machine translation on the PC with the MADLAD-400 model, or with DeepL and your key). The types the source has (forced, regular, SDH) and the extraction keeps are translated; they then go through *Create missing subtitles*, *Correct SRT files* and *Synchronize subtitles* like the others, and in the final file the track says **(translated)** in its name (for example `Italian regular (translated)`). When the source has only an SDH subtitle, the regular is made from it too (without the sounds and the names of the speakers); a sentence the two have in common is translated once (with DeepL it is counted once).
 
 The parameters list the videos of the input folder (or of the queue) **without a subtitle in that language but with a text subtitle in another one**, with their length and subtitle languages. Tick the videos to translate, or use **Select all** / **Deselect all**: at the start none is ticked, and the ticks are not saved in presets. **Translate from**: *Automatic* takes English when the video has it, then French, German, Spanish, Italian, Portuguese, then the first other language; *This language* translates only from the one you choose.
 
