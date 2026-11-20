@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.76.7**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.85.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -107,7 +107,7 @@ Open **Settings → Preferences... → Folders** before the first run.
 
 | Folder | What goes there |
 |---|---|
-| **Original input folder** | The videos to process (`.mkv`, `.mp4`, `.avi`, `.mov`, `.webm`). DVDs and Blu-rays too: `.iso` files and `VIDEO_TS` / `BDMV` folders (see [Read DVD and Blu-ray](#read-dvd-and-blu-ray)). The button with the disc chooses a drive of the PC: the disc in it is read. |
+| **Original input folder** | The videos to process (`.mkv`, `.mp4`, `.avi`, `.mov`, `.webm`, `.ts`, `.m2ts`). DVDs and Blu-rays too: `.iso` files and `VIDEO_TS` / `BDMV` folders (see [Read DVD and Blu-ray](#read-dvd-and-blu-ray)). The button with the disc chooses a drive of the PC: the disc in it is read. |
 | **Work folder** | Temporary files while the workflow runs. Leave it empty to use the default folder inside the app (`work`). It is cleaned at the end. |
 | **Output folder** | The finished files. Tick *Use work folder as output* to keep them in the work folder instead. |
 
@@ -238,6 +238,7 @@ While it runs:
   The time left appears after the first seconds of a step and is the time of the step, not of the
   whole workflow (every step goes at its own speed). When the workflow ends the bar shows the whole
   (100%). A pass with nothing to do (Movies or TV Series with an empty input folder) does not count.
+  When one file is encoded at a time the bar also gives the **size the final file will have**, from what the encode has written so far plus audio and subtitles: `... · 245 fps · ≈ 4.2 GB · 12 min left`.
 - While a workflow runs, **Windows does not go to sleep by itself**, even if it is set to sleep
   after some minutes without mouse or keyboard (the screen can still turn off).
 - The **last line of the log** shows the step that is running, with moving dots:
@@ -374,6 +375,15 @@ of a step where only some files were chosen) or **Skip this queue**.
 One workflow at a time is on purpose: one already uses every video card (an encode on two cards)
 and the CPU (audio converted in parallel), and two together would only slow each other down.
 
+**Analyse the queues...** (at the bottom of the window) shows, without encoding anything, what
+every queue will do with each of its files (the same lines as *File information*: tracks taken,
+conversions, HDR, files skipped), the expected size and the time of the encode, with the totals of
+each queue and of all of them. The size is known with a chosen bitrate, or with *Merge* (it
+copies); with constant quality or the automatic quality it is decided during the encode. The time
+comes from the speed of the encodes already made on this PC with the same codec, preset and size
+(Encode video writes it down after every video), so it gets better with use; with nothing measured
+like it yet it shows `—`. Both are an order of magnitude, not a promise.
+
 ### Where the files end up
 
 - With **Merge** or **Encode video**, the finished MKV files go to the **Output folder**.
@@ -490,9 +500,9 @@ original one). For each language the best track is taken, leaving out commentari
   missing subtitles, OCR) do not touch them; *Synchronize subtitles* does, like every subtitle of
   the video. With the hardsub they are not muxed, like the other subtitles.
 
-**Video formats.** The input folder can hold `.mkv`, `.mp4`, `.avi`, `.mov` and `.webm` files; the
+**Video formats.** The input folder can hold `.mkv`, `.mp4`, `.avi`, `.mov`, `.webm`, `.ts` and `.m2ts` files; the
 final file is always an `.mkv` (`Film.mp4` becomes `Film.mkv`). Files in other video formats
-(`.ts`, `.wmv`...) are skipped, and the check before the start lists them. Two files
+(`.wmv`, `.flv`...) are skipped, and the check before the start lists them. Two files
 with the same name and different extensions (`Film.mp4` and `Film.mkv`) would give the same
 final file: the check before the start stops and asks to rename one. `.iso` files and folders with a copied disc are read by the step [Read DVD and Blu-ray](#read-dvd-and-blu-ray); without it the check before the start lists them and they are ignored.
 
@@ -537,6 +547,12 @@ Videos with no audio at all are listed by name too, and skipped.
 Image subtitles (Blu-ray `.sup`, DVD `.idx/.sub`) are extracted only when the workflow also
 has **Convert image subtitles to SRT**.
 
+**TV recordings.** A `.ts` recorded from TV is processed like the other videos. Its **teletext**
+subtitles (one page per language, for example page 777) are read as text: every page becomes an
+SRT in its language, and a page for the hearing impaired becomes the SDH. Its **DVB** subtitles
+are pictures: they are turned into Blu-ray pictures (`.sup`), so **Convert image subtitles to
+SRT** reads them like the others.
+
 > AAC audio is saved as `.mka`, not as a raw `.aac`: some AAC 5.1 tracks lose their channel
 > layout in a raw file and become silent after merging.
 
@@ -553,6 +569,7 @@ has **Convert image subtitles to SRT**.
 | Output layout | 5.1 or 7.1. Stereo and mono tracks are upmixed. |
 | Bitrate | Default: the maximum of the codec (AC3 640k, E-AC3 1536k...). |
 | Samplerate | Default: 48000 Hz. |
+| Use the core without re-encoding | On by default. A DTS-HD MA, DTS-HD HRA or DTS:X track already contains a normal DTS track (the *core*), and a Blu-ray E-AC3 7.1 an AC3 or E-AC3 5.1 one: when it is exactly the chosen codec in 5.1, it is taken as it is, in a second, instead of a second lossy encode (measured on a DTS-HD MA 5.1 film: 2 minutes in 1 second, the same sound as the original to -59 dB). Otherwise the audio is converted as usual. TrueHD in MKV has no AC3 core. Not with *Even loudness*. |
 | Extra tracks | The tracks of the [extra languages](#extra-languages): **Like the main one** (default: the same codec, channels and bitrate, files every TV can play) or **Copied as they are** (original quality, e.g. DTS or TrueHD, bigger files, some TVs cannot play them). |
 | 5.1 surround layout | *5.1 side* (recommended) or *5.1 rear*. |
 | Run volume check on mono files | Measures the peak of mono tracks and lowers the volume when it goes over the threshold (default -2 dB), so the upmixed audio does not distort. |
@@ -724,13 +741,14 @@ not converted again.
 
 | Setting | |
 |---|---|
-| Video codec | H.264 or H.265, on an NVIDIA GPU (**NVENC**, fast) or on the CPU (x264 / x265). The NVENC codecs are listed only if a card passed the NVENC test (see [GPU](#gpu)). |
+| Video codec | H.264 or H.265, on an NVIDIA GPU (**NVENC**, fast) or on the CPU (x264 / x265). The NVENC codecs are listed only if a card passed the NVENC test (see [GPU](#gpu)). **AV1**: on the CPU with SVT-AV1, or with NVENC on RTX 40 cards and newer (see below). |
 | Rate control | NVENC only: **Automatic (VMAF)**, **VBR** (default, the bitrate below), **CBR** or **VBR constant quality (CQ)**. |
 | Quality control | x264 / x265 only: **Automatic (VMAF)**, **Bitrate** (default, predictable size) or **Constant quality (CRF)**. See [Resolution and quality](#resolution-and-quality) below. |
 | Quality (VMAF) | With *Automatic (VMAF)*: **Visually identical (97)** (default), **High (95)**, **Good (93)** or **Medium (90)**. See below. |
 | CRF | With *Constant quality (CRF)*: **Automatic** (default, by the resolution that comes out) or a value from 14 to 30. |
 | Video bitrate | With *VBR* / *CBR* (NVENC) or *Bitrate* (x264 / x265) it is **required**: there is no default, you have to enter it (for example `4000` = 4000 kbit/s). Hidden with *Automatic (VMAF)*, where the program chooses it, and not used with *CQ* or *CRF*. |
 | Not above the original bitrate | Off by default. When the original video has a lower bitrate than the chosen one, the encode uses the original one: a video downloaded from the web at 1100 kbit/s encoded at 2600k only becomes twice as big, with no gain in quality. The log says which bitrate is used, for example `Original video at 1135 kbit/s, below 2600k: 1135k is used`. With an H.265 original the same bitrate in H.264 is a little less sharp. Not used with CQ or CRF. |
+| Do not re-encode an efficient video | Off by default. When the original video is already in the chosen codec (H.264 or H.265 with the same bit depth) and its bitrate is not above the one of the encode (also the one found by the automatic quality), it is copied as it is: a new encode would only lose quality. Audio and subtitles are processed as usual. Not when the picture has something to do (deinterlace, black bars, resolution, grain, sharpening, 3D, HDR converted, hardsub, frame rate), nor with CQ or CRF. The log says `Already efficient (H.264 at 2100 kbit/s, not above the 2600k of the encode): the video is copied, not re-encoded`. |
 | Two passes | x264 / x265 with a bitrate: **on** by default. See below. |
 | NVENC preset / CPU preset | Speed against quality. |
 | Bit depth | 8 or 10 bit. |
@@ -795,8 +813,9 @@ over the film) and prepares the picture. The log says what it found for every vi
   recordings). It works on the brightness only, so the edges get no colour fringes, and it
   strengthens weak edges more than sharp ones, with fewer halos than a classic filter. *Light* for
   a touch, *Medium* for a soft DVD, *Strong* only for a very blurry picture, because it also brings
-  out the grain. With the grain reduction it comes after it. A sharper picture needs a few more
-  bits for the same quality; the automatic quality takes it into account.
+  out the grain. With the grain reduction it comes after it. For the same quality the file grows by
+  about 7-20% with Light and Medium and 15-35% with Strong; the automatic quality takes it into
+  account.
 - **3D → 2D** (Automatic by default). A 3D video has the two eyes side by side (SBS) or one
   above the other (top and bottom, TAB / OU): on a normal TV it looks double. The step
   recognises it from the 3D flag of the file, from the name (`3D`, `HSBS`, `Half-OU`...) and
@@ -820,7 +839,7 @@ picture.
   card decodes, resizes and encodes without the frames ever leaving it (`Resize on the video
   card`): faster, and the CPU stays free for the audio. A burned image subtitle follows the new
   size.
-- **Automatic quality (VMAF)**, with *Rate control* (NVENC) or *Quality control* (x264 / x265) on *Automatic (VMAF)*: for every video the program takes six pieces of 8 seconds spread over it, with the same deinterlace, crop, resolution and tone mapping as the encode, encodes them at a few bitrates with the step's settings and compares them with the original using **VMAF** (0-100, the measure of picture quality made by Netflix). It keeps the lowest bitrate whose mean reaches the chosen level, with the hardest piece no more than 3 points below, and encodes the whole video at that bitrate (VBR, or two passes with x264 / x265). The next episode starts from the bitrate of the one before, so the search gets shorter. It takes about 1-2 minutes per video; the log shows every try and the result: `Automatic quality: 4200k (VMAF 97.1, hardest piece 95.6)`. The bitrate never goes far above the original's (at most 3.5 times for an H.265 original, 1.5 for H.264, the original's own with *Not above the original bitrate*): when the level cannot be reached, for an original with a lot of grain or already heavily compressed, the program uses the lowest bitrate near the best quality possible and says so. Measured on an H.265 10-bit 1080p web series (video at 2200 kbit/s) to H.264 NVENC: VMAF 97 between 4200k and 7700k depending on the episode, and on parts of the finished file that the search had not tried VMAF 96.9 and 97.0. The [Encode preview](#encode-preview) shows the bitrate found.
+- **Automatic quality (VMAF)**, with *Rate control* (NVENC) or *Quality control* (x264 / x265) on *Automatic (VMAF)*: for every video the program takes six pieces of 8 seconds spread over it, with the same deinterlace, crop, resolution and tone mapping as the encode, encodes them at a few bitrates with the step's settings and compares them with the original using **VMAF** (0-100, the measure of picture quality made by Netflix). It keeps the lowest bitrate whose mean reaches the chosen level, with the hardest piece no more than 3 points below, and encodes the whole video at that bitrate (VBR, or two passes with x264 / x265). The next episode starts from the bitrate of the one before, so the search gets shorter. It takes about 1-2 minutes per video; the log shows every try and the result: `Automatic quality: 4200k (VMAF 97.1, hardest piece 95.6)`. The bitrate never goes far above the original's (at most 3.5 times for an H.265 original, 1.5 for H.264, the original's own with *Not above the original bitrate*): when the level cannot be reached, for an original with a lot of grain or already heavily compressed, the program uses the lowest bitrate near the best quality possible and says so. Measured on an H.265 10-bit 1080p web series (video at 2200 kbit/s) to H.264 NVENC: VMAF 97 between 4200k and 7700k depending on the episode, and on parts of the finished file that the search had not tried VMAF 96.9 and 97.0. The [Encode preview](#encode-preview) shows the bitrate found. The pieces are not at fixed places: in every sixth of the film the program weighs a few places by the size of their video packets (about a second, nothing is decoded) and puts three pieces on the most demanding scenes and three on typical ones, so the hard scenes are always measured; with a flat bitrate it uses fixed places.
 - **Constant quality (CRF)**, for x264 and x265: every scene gets the bits it needs for the same
   quality, so easy scenes cost little and hard ones more; the size is not known in advance (the
   [Encode preview](#encode-preview) estimates it). *Automatic* uses the values of HandBrake's
@@ -832,6 +851,15 @@ picture.
   the quality is better and the final bitrate is the chosen one (in our tests 1912 kbit/s for
   2000 chosen, 2293 with one pass). The encode takes about 30-50% longer. The log says
   `Two passes (the first one fast)` and `First pass done: ...`.
+- **AV1** (*AV1 (CPU - SVT-AV1)*, or *AV1 (NVENC)* on RTX 40 cards and newer, which is shown only
+  when a card passes its test): smaller files for the same picture than H.264 and, with NVENC,
+  than H.265. Measured on a web 1080p, a grainy BDRip and a cartoon at the same VMAF: SVT-AV1 on
+  its default *SVT-AV1 preset* 6 is 4-6 times faster than x265 slow (26-34 frames per second at
+  1080p on a 6-core CPU) for about the same size (15-20% smaller on the cartoon, larger on the web
+  video), and 15-30% smaller than H.265 NVENC. Its *CRF* has its own scale (0-63): *Automatic* is
+  22 up to 1080p and 24 above. The quantization matrices are on (13% smaller on the grainy video).
+  With 10 bit HDR10 is kept; Dolby Vision and HDR10+ are kept only in H.265 (in AV1 they stay
+  HDR10). There are no two passes: SVT-AV1 spreads the bitrate by itself.
 
 ##### HDR videos
 
@@ -840,9 +868,11 @@ colours, shown properly only by an HDR TV. The step recognises them by itself (n
 do not change) and, with **HDR** on *Automatic*:
 
 - in **H.265 at 10 bit** the HDR is **kept** as it is, with its brightness data (mastering
-  display, MaxCLL), as HandBrake does: `HDR: HDR10, kept (H.265 10 bit)`. HDR10+ and Dolby
-  Vision (profiles 7 and 8) are kept as HDR10, their extra layer is not; Dolby Vision profile 5,
-  which has no HDR10 picture, is made HDR10;
+  display, MaxCLL), as HandBrake does: `HDR: HDR10, kept (H.265 10 bit)`. HDR10+ and Dolby Vision
+  (profiles 7 and 8) are kept too, frame by frame, with NVENC as with x265: a Blu-ray profile 7
+  becomes profile 8.1 (the HDR10 picture with the Dolby Vision data), and its active area follows
+  the black bars cut and the new size (`Dolby Vision (profile 7 made 8.1) kept on 737 of 737
+  frames`); Dolby Vision profile 5, which has no HDR10 picture, is made HDR10;
 - in **H.264**, or H.265 at **8 bit**, HDR cannot be kept: the video is **converted to SDR**
   (tone mapping), with natural colours and highlights, instead of the pale, grey picture an HDR
   video gives when it is just re-encoded: `HDR: HDR10, converted to SDR (H.264 cannot keep HDR)`.
@@ -851,6 +881,14 @@ do not change) and, with **HDR** on *Automatic*:
 screen (a PC monitor, an old TV, a phone). The conversion runs on the video card (Vulkan, fast);
 where it cannot, on the CPU, slower: the log says `Tone mapping on the video card failed (no
 Vulkan?): done again on the CPU (slower)`.
+
+Among the *Advanced* settings, three choices change the conversion on the video card: **HDR → SDR:
+curve** (*Automatic*, recommended: the most balanced in our tests on a 4K Dolby Vision film and a
+very dark HDR10 one; *BT.2446a* and *Hable* are softer, *BT.2390* and *Mobius* have more contrast
+but darken the shadows, in dark scenes faces can nearly disappear), **HDR → SDR: colours** (what
+happens to the colours that SDR does not have: *Perceptual* by default) and **HDR → SDR: contrast
+recovery** (*Normal*; small effect). The log writes them when they are not the default ones: `Tone
+mapping: tonemapping=hable, gamut_mode=relative, contrast_recovery=1`.
 
 A subtitle **burned** into a video that stays HDR (SRT or image subtitles) is made darker, at the
 brightness of the white of the scene: at full white it would dazzle on an HDR TV. An ASS keeps its
@@ -877,6 +915,10 @@ settings of the step, to choose the bitrate before starting a whole series:
 - **Open preview** plays the piece in your video player; **Compare a frame** shows the same
   frame of the original and of the encode at real size (zoom 100-300%): the button or the space
   bar switches between them, so the differences in faces, dark areas and grain show.
+  The **View** menu has three more ways to compare: *Split* (original on the left, encode on the
+  right, the line moved with the mouse), *Checkerboard* (squares of the two, a visible edge is a
+  difference) and *Differences* (black where the picture is the same, brighter where it differs,
+  made 4 times stronger, with the PSNR of the frame: above 40 dB the difference is hard to see).
 
 The estimates come from the piece: an action scene needs more bits than a dialogue, so try a
 busy part of the film. The preview files are deleted when the window closes.
@@ -981,6 +1023,21 @@ uploads included, is over.
 ### Extras
 
 Special jobs, outside the usual flow of a workflow.
+
+#### Join split films
+
+A film split in more files (`Film CD1.avi` + `Film CD2.avi`, the old downloads made to fit two
+CDs) becomes one MKV, without re-encoding: the parts are appended one after the other. The parts
+are recognised from the name: **CD1 / CD2**, **Disc 1 / Disc 2**, **DVD1 / DVD2** at the end of
+the name; **Part 1 / Part 2** (or `pt1`) only when every part lasts less than 75 minutes, so two
+different films called "... Part 1" and "... Part 2" stay separate; never a TV episode (`S01E01
+... Part 1`); the numbers from 1 without gaps. The check before the start lists what will be
+joined (`Film CD1.mkv + Film CD2.mkv will become Film.mkv`): if they are not parts of the same
+film, press Cancel and rename them. The parts must have the same format (video codec, size and
+frame rate, the same audio and subtitle tracks): otherwise they are not joined, the check says
+why, and they are processed one by one. The next steps work on the joined film; the parts count as
+its originals, so they are deleted (when asked in the Preferences) only when the joined film has
+its final file.
 
 #### Split multi-episode file
 
@@ -1171,6 +1228,17 @@ Only the videos processed in that run are removed, and only if their finished fi
 videos fail, only their originals are kept and the others are removed. Nothing is removed if
 the workflow is stopped or has other errors (for example a failed upload).
 
+**Check every final file before the originals are deleted** (on by default): as soon as *Merge*
+or *Encode video* makes a final file, it is decoded from start to end on the video card (one
+file per card, on the CPU without NVIDIA cards) while the step goes on with the next one, and
+the length of its audio tracks and of its video is compared with the original. The log says
+`[Check] Episode.mkv: decodes without errors, tracks complete (92 s)`. A damaged file (decoding
+errors, an audio track that ends before the video when it did not in the original, a video
+shorter than the original's) is renamed `<name>.damaged.mkv`: it goes to the output folder so
+you can look at it, it is not uploaded, and its original counts as not completed, so it is kept.
+Errors that the original has too (a merge copies the video as it is) are only a warning. A
+54-minute 1080p episode takes about 90 seconds, almost all while the next one is encoded.
+
 ### Language
 
 - **Program language**: the language of menus and windows: English, Italiano, Français,
@@ -1297,7 +1365,7 @@ An example under the options shows where a movie and an episode will go.
 ### GPU
 
 At the first start the app detects the NVIDIA video cards and tests NVENC on each of them
-(H.264 and H.265, about one second). The result is saved, so later starts only count the cards;
+(H.264, H.265 and AV1, about one second). The result is saved, so later starts only count the cards;
 if the number changes (a card added or removed), the app asks whether to detect them again.
 **Detect again** does it at any time, for example after a driver update.
 

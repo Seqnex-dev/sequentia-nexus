@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.76.7-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.85.0-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -47,15 +47,20 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   original one next to the dubbed one, with their subtitles.
 - **Convert the audio**: keep it as it is or convert it (AC3, E-AC3, AAC, FLAC, DTS, Opus,
   MP3), with 5.1 / 7.1 upmix and an optional even loudness (EBU R128) for every episode.
+  The DTS core of a DTS-HD MA track is taken in a second, without re-encoding.
   Several files are converted at the same time.
-- **Read image subtitles** from Blu-rays (`.sup`) and DVDs (`.idx/.sub`) and turn them into
-  SRT text, with a smart correction that fixes the typical OCR mistakes.
+- **Read image subtitles** from Blu-rays (`.sup`), DVDs (`.idx/.sub`) and TV recordings (DVB)
+  and turn them into SRT text, with a smart correction that fixes the typical OCR mistakes.
+- **TV recordings** (`.ts`, `.m2ts`): the teletext subtitles (page 777 and the others) become
+  SRT, one per language, the one for the hearing impaired as SDH.
 - **Subtitles from the audio**: a video without subtitles gets one by speech to text
   (Whisper), on the NVIDIA video card or on the CPU.
 - **Episode names from TMDB**: `Name.Of.The.Series.S02E05.1080p.WEB-GROUP` becomes
   `Name Of The Series - S02E05 - Episode title`, with your own template (folders for Plex,
   Jellyfin, Kodi too) and the titles in your language; series numbered differently (a
   Netflix release in two seasons) follow TMDB's alternative orders.
+- **Films split in parts joined**: `Film CD1.avi` + `Film CD2.avi` become one MKV without re-encoding,
+  recognised from the name and confirmed before the start.
 - **Multi-episode files split**: `S04E01-E02` or `18-21 - Title` becomes one file per episode, re-encoding only a few seconds
   around the cuts; the opening theme and the end credits are found from the other episodes
   and copied where they are missing, every cut previewed with and without a fade.
@@ -67,11 +72,13 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   preview on the real subtitles of your videos; save the rules and load them in other
   workflows, or share them as a file.
 - **Merge** everything into an MKV, or **encode** the video (NVIDIA NVENC or CPU,
-  H.264 / H.265). With two NVIDIA cards, two videos are encoded at the same time, and the
+  H.264 / H.265 / AV1, AV1 with SVT-AV1 or on RTX 40 cards). With two NVIDIA cards, two videos are encoded at the same time, and the
   CPU converts the audio while the cards encode.
 - **Automatic quality (VMAF)**: for every video the program tries a few pieces at different
   bitrates, measures them against the original with VMAF and encodes at the lowest bitrate that
   reaches the level you choose (from "visually identical" down), never far above the original's.
+  The pieces sit on the demanding scenes of the film, and a video that is already efficient can
+  be copied instead of re-encoded. During the encode the bar shows the size of the final file.
 - **Encode preview**: a piece of a video encoded with your settings, with the size and time
   expected for the whole video, the quality (VMAF) and a frame to compare with the original.
 - **Clean up the picture** before the encode: automatic deinterlacing (only when the video
@@ -81,8 +88,9 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
 - **Resolution and quality**: a maximum resolution (a 4K film becomes 1080p, never enlarged;
   resized on the video card when possible), constant quality (CRF, automatic by resolution) and
   two passes for the CPU encoders.
-- **HDR videos**: kept as HDR in H.265 10 bit, or converted to SDR with natural colours
-  (tone mapping on the video card) in H.264.
+- **HDR videos**: kept as HDR in H.265 10 bit, Dolby Vision and HDR10+ included (with NVENC too;
+  Blu-ray profile 7 made 8.1), or converted to SDR with natural colours (tone mapping on the video
+  card) in H.264.
 - **Burn subtitles into the video** (hardsub): SRT with a Blu-ray-like style, ASS with its own
   style and fonts, Blu-ray and DVD image subtitles as they are. The fonts of ASS subtitles
   stay in the final file; an episode that lacks one borrows it from the other episodes.
