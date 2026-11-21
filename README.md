@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-0.85.0-0e639c">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.89.0-0e639c">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0e639c">
   <img alt="Status" src="https://img.shields.io/badge/status-beta-d08a1e">
 </p>
@@ -55,10 +55,12 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   SRT, one per language, the one for the hearing impaired as SDH.
 - **Subtitles from the audio**: a video without subtitles gets one by speech to text
   (Whisper), on the NVIDIA video card or on the CPU.
-- **Episode names from TMDB**: `Name.Of.The.Series.S02E05.1080p.WEB-GROUP` becomes
-  `Name Of The Series - S02E05 - Episode title`, with your own template (folders for Plex,
-  Jellyfin, Kodi too) and the titles in your language; series numbered differently (a
-  Netflix release in two seasons) follow TMDB's alternative orders.
+- **Movie and episode names from TMDB**: `Name.Of.The.Series.S02E05.1080p.WEB-GROUP` becomes
+  `Name Of The Series - S02E05 - Episode title` and `Film.Title.2020.1080p.WEB-DL` becomes
+  `Film Title (2020)`, found by themselves, with your own templates (folders for Plex, Jellyfin,
+  Kodi too, and tokens such as the resolution and the codecs read from the finished file) and the
+  titles in your language; series numbered differently (a Netflix release in two seasons) follow
+  TMDB's alternative orders.
 - **Films split in parts joined**: `Film CD1.avi` + `Film CD2.avi` become one MKV without re-encoding,
   recognised from the name and confirmed before the start.
 - **Multi-episode files split**: `S04E01-E02` or `18-21 - Title` becomes one file per episode, re-encoding only a few seconds
@@ -101,7 +103,12 @@ every video in a folder. The result is a clean MKV with the audio and subtitles 
   ready, while the others are still encoding. A server that does not answer keeps its files
   for *Continue upload*.
 - **Movies and TV series** can have separate folders and separate settings: one workflow,
-  two passes.
+  two passes. Or **one folder** (the one of your download program): movies and episodes are
+  recognised from their names, sub-folders are read at every level, samples and extras left out.
+- **Watched folder**: the new videos of your download folder (JDownloader's *Extract to*, or any
+  other) are processed by themselves once the downloads are over, with the workflow you chose;
+  videos that need a choice wait for you, nothing is done twice, and the program can stay next to
+  the clock.
 - **Pause and resume** a run, see the **time left** and the encode speed, put the PC to
   **sleep, hibernate it or shut it down when done**; the workflow runs at low priority, so the PC
   stays usable.

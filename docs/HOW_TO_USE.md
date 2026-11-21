@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.85.0**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.89.0**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -133,6 +133,39 @@ input, work and output folders. Then:
   **Warn when the movies or TV series input folder has no videos** (Preferences → Folders).
   An input folder that is not set at all counts as empty: you can leave the TV Series folder blank if you only process movies (or the other way round).
   If an input folder no longer exists (for example a USB or network disk not connected), a window asks before the checks: **Retry**, **Change folder...** (saved in Preferences), **Skip this part** (Movies / TV Series only) or **Cancel**. If the Movies or TV Series input folder is not set but *Transfer audio and subtitles* has pairs of files in that part, you can **Choose input folder...** or **Go on with the pairs only**.
+
+### One folder for a download program
+
+Choose **Single folder with automatic recognition of movies and TV series** when a download
+program (JDownloader, Mipony...) puts movies and series in the same folder. Set its input folder
+(with JDownloader, the *Extract to* folder of the archive extractor), then:
+
+- movies and episodes are recognised from their names: `S01E01` or `1x01` is an episode; a year
+  after the title (`Film.2020.1080p`) is a movie; numbers at the start (`01 - Title`,
+  `01.Title`) are an episode when written with a leading zero or when the folder has other
+  numbered files; anything else is a movie;
+- each video gets the values of the **🎬 Movies** or **📺 TV Series** box of the steps;
+- the work folders are those of the Movies and TV Series boxes; the finished files go to their
+  output folders, or to two **Custom folders** chosen in this box.
+
+**Sub-folders.** In every mode, and in the queues, the input folder is read at every level: a
+download program often makes a sub-folder for each movie or series. The files are not moved, and
+the finished files all go to the output folder, without the sub-folders. Samples, trailers,
+featurettes, folders like *Sample* and *Extras*, and videos shorter than 5 minutes are left out.
+With **Delete original files** on, a download sub-folder goes too (with its `.nfo`, pictures and
+samples) once no video is left in it; the input folder itself always stays. Two videos with the
+same name in different sub-folders stop the start, because their finished files would have the
+same name.
+
+### Watched folder
+
+**Preferences → Watched folder** processes by themselves the new videos of a folder, for example the *Extract to* folder of JDownloader. Tick **Watching on**, choose the folder and the workflow (**Open preset...** takes a copy of a saved preset, **Edit workflow...** changes it, as in the queues), and how many minutes the folder must stay without changes.
+
+- **When**: a round starts when nothing changed in the folder for those minutes (downloads go one at a time), and only with the videos ready: no program has them open, and no archive or `.part` file is left in their folder. With **Ask JDownloader** (its local API, see the **?**: no account, no password) a round starts a minute after JDownloader has nothing more to download or extract.
+- **How**: the videos run as a queue with that workflow, movies and episodes recognised from the names, in the output folders of **Folders**. A video is never processed twice: the program remembers the files done (a file that changes counts as new). A video that would ask a choice before the start (tracks without language, audio in another language, a disc) or that failed waits in **Tools → Videos waiting**: open it in the Queue to start it with the usual windows, try it again at the next round, or ignore it.
+- **Queues**: tick **Watch the folders of this queue** in a queue to watch its folders with its own workflow and output; its folders are saved with it and it comes back at the next start.
+- **Safety**: no round starts while you run a workflow or a queue; before a round the work and output folders need free space for twice the biggest new video, otherwise the videos wait and a message says so (also on Telegram, when on). *When done* (sleep, shut down) is not used by the rounds.
+- **Next to the clock**: with the watching on, closing the window leaves the program next to the clock, still watching (right click → **Quit** to close it). The status bar says what the watching is doing.
 
 ---
 
@@ -1041,7 +1074,7 @@ its final file.
 
 #### Split multi-episode file
 
-Splits a file with two or more episodes joined (`S04E01-E02`, `S04E01E02`, `4x01-02` in the name) into one file per episode. Only a few seconds around each cut are encoded again: the rest of the video (H.264 or H.265) is copied as it is, AC3, E-AC3 and DTS audio keeps its frames, lossless audio stays lossless (FLAC), every subtitle track follows. The new files get the code of their episode (`S04E01`, `S04E02`) and, when the name has as many titles as episodes (`Title A & Title B`), one each; **Rename episodes (TMDB)** can then give them the real titles. The next steps of the workflow work on the split episodes. Also a name that starts with the numbers of the episodes, without the season (`10-11 Title`, `18-21 - Title`, up to ten episodes in one file): the new files are `10 Title`, `11 Title`.
+Splits a file with two or more episodes joined (`S04E01-E02`, `S04E01E02`, `4x01-02` in the name) into one file per episode. Only a few seconds around each cut are encoded again: the rest of the video (H.264 or H.265) is copied as it is, AC3, E-AC3 and DTS audio keeps its frames, lossless audio stays lossless (FLAC), every subtitle track follows. The new files get the code of their episode (`S04E01`, `S04E02`) and, when the name has as many titles as episodes (`Title A & Title B`), one each; **Rename movies and episodes (TMDB)** can then give them the real titles. The next steps of the workflow work on the split episodes. Also a name that starts with the numbers of the episodes, without the season (`10-11 Title`, `18-21 - Title`, up to ten episodes in one file): the new files are `10 Title`, `11 Title`.
 
 Before the start press **Prepare the split...** in the parameters (the choices are for those files and are not saved in the preset). The window analyses each file in about a minute, comparing it with the other episodes of the series in the same folder:
 
@@ -1052,9 +1085,19 @@ Before the start press **Prepare the split...** in the parameters (the choices a
 
 A video that cannot be encoded again like its source (Dolby Vision, MPEG-2, VC-1, AV1, interlaced) is cut only at its key pictures, without black or fades: the check before the start says so. The double file counts as an original: it is deleted (when asked in the Preferences) only when every episode has its final file.
 
-#### Rename episodes (TMDB)
+#### Rename movies and episodes (TMDB)
 
 Gives the episodes of TV series a clean name with the titles from TMDB, instead of names like `Name.Of.The.Series.S02E05.1080p.WEB.x264-GROUP.mkv`. The files with `S01E01`, `S01E01E02` (two episodes) or `1x01` in the name are grouped by series (everything before the episode number; with only `S02E05`, the name of the folder), all the seasons of a series in one group.
+
+**Movies** (**Rename the movies too**, on): title and year come from the file name (`Profumo.di.bergamotto.2026.WebDL.1080p...`, `Film (Director, 1953) VHSRip`) or from the folder of the download, and the movie is found by itself on TMDB; when two movies are alike, the runtime of the file decides. **Name template of the movies**: `{title}`, `{year}`, `{original_title}`; a `/` makes a folder per movie (`{title} ({year})/{title} ({year})`). A movie not found for sure keeps its name, and the log says which movies came closest.
+
+**Series matched by themselves**: a series not matched yet is searched at the start; when one series has exactly that name it is taken, and with series of the same name the titles of the episodes in the file names decide (`MobLand.S02E10.The.Queen.is.Dead`). Files with only the title are searched with the name of their folder and checked with their titles. The ones found are green, *Matched by itself on TMDB*; the others are searched with **Search TMDB...** as before.
+
+**Title from the file name**: when TMDB has no title of an episode in the language, the title written in the file name is used (`La.cicogna.S01E01.Arriva.il.bambino` → *Arriva il bambino*), with accents and apostrophes put back from the word list of the language (`Perche.la.citta` → *Perché la città*, `Cera.una.volta` → *C'era una volta*); only then the choice of **Titles missing in the language**. These names are orange in the preview.
+
+**More tokens**, for movies and episodes: from the original name `{source}` (WEB-DL, BluRay...), `{release_info}` (the whole technical part) and `{group}`; from the finished file, read when it is renamed and so always right after an encode, `{resolution}`, `{vcodec}`, `{audio}`, `{languages}`, `{hdr}`. **Character instead of the spaces** (empty by default): with a dot, `The Expanse - S01E05 - Title` becomes `The.Expanse.S01E05.Title`.
+
+**Names to check** (Tools menu, and by itself at the end of a workflow that left some): the movies and episodes not found for sure keep their names and are listed here, with the candidates of TMDB; **Search TMDB...** finds another one. **Use this one** renames the final file, the original (unless in seed) and the copies uploaded to the servers, also into the folder of the new name (a folder per movie); a server that does not answer keeps the entry for a later try. For a word right with and without the accent (*e* / *è*, *si* / *sì*) in a title from a file name, the program asks DeepL (with your key) or the translation model on the PC, on the CPU, and takes the answer only when it has the same letters.
 
 **Files with only the title** (`Tabula rasa.mkv`, without `S01E01`): the files of one folder make one group, named after the folder. Once the series is chosen with **Search TMDB...**, season and episode of every file are found from its title, compared with the titles of every season (in the language of the titles, the fallback one and English; capitals, accents, apostrophes and technical words such as `1080p` do not count). A file with two titles in a row is a double episode (`S04E01-E02`). A title not found, or close to two episodes, is not renamed (red in the preview), and the preview lists at the bottom the episodes of those seasons that have no file. The folder is not remembered (the next files put in it can be another series), but the series is remembered under its TMDB names: a later season with the name in the files (`I.Woke.Up.A.Vampire.S03E01`) is matched by itself. With another order chosen in **Numbering** (for example *Netflix Seasons*), the titles are looked for in that order and the files take its numbering (the first episode of the second Netflix season becomes `S02E01`). A name that starts with the numbers of the episodes without the season (`10-11 Title`, or `18 - Title` after **Split multi-episode file**) is matched by those numbers and its title: the season where those episodes have a title that starts with it (`10-11 The Day of Black Sun` → `S03E10-E11`).
 
