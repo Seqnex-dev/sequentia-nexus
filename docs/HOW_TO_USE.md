@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.89.5**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.89.14**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -111,8 +111,10 @@ Open **Settings → Preferences... → Folders** before the first run.
 | **Work folder** | Temporary files while the workflow runs. Leave it empty to use the default folder inside the app (`work`). It is cleaned at the end. |
 | **Output folder** | The finished files. Tick *Use work folder as output* to keep them in the work folder instead. |
 
-The input, work and output folders must be different: the app refuses to save folders that
-are the same, because files could be lost.
+The input and work folders must be different: the app refuses to save them the same, because files could be lost.
+The output folder can be the input folder only for a workflow with just *Rename movies and episodes (TMDB)*,
+which renames the files where they are: the folders page shows it in orange, and any other workflow is
+stopped by the checks before the start.
 
 If you never choose a work or output folder, the first time you press **▶ Start workflow** the
 app tells you which default folders it will use (inside the program folder) and asks whether
@@ -159,7 +161,7 @@ same name.
 
 ### Watched folder
 
-**Preferences → Watched folder** processes by themselves the new videos of a folder, for example the *Extract to* folder of JDownloader. Tick **Watching on**, choose the folder and the workflow (**Open preset...** takes a copy of a saved preset, **Edit workflow...** changes it, as in the queues), and how many minutes the folder must stay without changes.
+**Preferences → Watched folder** processes by themselves the new videos of a folder, for example the *Extract to* folder of JDownloader. Tick **Watching on**, choose the folder and the workflow (**Open preset...** uses a saved preset: what you save in it later is used from the next round; **Edit workflow...** makes a copy of it that no longer follows the preset, as in the queues), and how many minutes the folder must stay without changes.
 
 - **When**: a round starts when nothing changed in the folder for those minutes (downloads go one at a time), and only with the videos ready: no program has them open, and no archive or `.part` file is left in their folder. With **Ask JDownloader** (its local API, see the **?**: no account, no password) a round starts a minute after JDownloader has nothing more to download or extract.
 - **How**: the videos run as a queue with that workflow, movies and episodes recognised from the names, in the output folders of **Folders**. A video is never processed twice: the program remembers the files done (a file that changes counts as new). A video that would ask a choice before the start (tracks without language, audio in another language, a disc) or that failed waits in **Tools → Videos waiting**: open it in the Queue to start it with the usual windows, try it again at the next round, or ignore it.
@@ -1089,7 +1091,11 @@ A video that cannot be encoded again like its source (Dolby Vision, MPEG-2, VC-1
 
 Gives the episodes of TV series a clean name with the titles from TMDB, instead of names like `Name.Of.The.Series.S02E05.1080p.WEB.x264-GROUP.mkv`. The files with `S01E01`, `S01E01E02` (two episodes) or `1x01` in the name are grouped by series (everything before the episode number; with only `S02E05`, the name of the folder), all the seasons of a series in one group.
 
-**Movies** (**Rename the movies too**, on): title and year come from the file name (`Profumo.di.bergamotto.2026.WebDL.1080p...`, `Film (Director, 1953) VHSRip`) or from the folder of the download, and the movie is found by itself on TMDB; when two movies are alike, the runtime of the file decides. **Name template of the movies**: `{title}`, `{year}`, `{original_title}`; a `/` makes a folder per movie (`{title} ({year})/{title} ({year})`). A movie not found for sure keeps its name, and the log says which movies came closest.
+**Movies** (**Rename**: *Movies and TV series* (default), *Only the movies* or *Only the TV series*): title and year come from the file name (`Profumo.di.bergamotto.2026.WebDL.1080p...`, `Film (Director, 1953) VHSRip`) or from the folder of the download, and the movie is found by itself on TMDB; when two movies are alike, the runtime of the file decides. **Name template of the movies**: `{title}`, `{year}`, `{original_title}`; a `/` makes a folder per movie (`{title} ({year})/{title} ({year})`). A movie not found for sure keeps its name, and the log says which movies came closest.
+
+**Files to rename**: *Files of the folder and its sub-folders* (default) or *Only the files of the folder*, when the sub-folders already hold videos with the right names: those are not looked for on TMDB. The other steps still work on every video. A long list takes time (TMDB answers about two searches a second): the log says how far the search is, and Stop ends it at once.
+
+**Movies folder** / **TV series folder**: with the rename alone in the workflow, the files are taken from these folders and renamed where they are, without changing the Preferences (empty = the input folder of the Preferences). **Rename the copies on the server too**: a renamed file already uploaded to a remote server (with a wrong name in an earlier workflow) is renamed there too, in the right folder; the copy is found in the upload record or, for older uploads, by name and size in the Movies / Series folders of the server.
 
 **Series matched by themselves**: a series not matched yet is searched at the start; when one series has exactly that name it is taken, and with series of the same name the titles of the episodes in the file names decide (`MobLand.S02E10.The.Queen.is.Dead`). Files with only the title are searched with the name of their folder and checked with their titles. The ones found are green, *Matched by itself on TMDB*; the others are searched with **Search TMDB...** as before.
 
