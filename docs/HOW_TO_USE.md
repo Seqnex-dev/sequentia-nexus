@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.89.14**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.89.16**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -1096,6 +1096,8 @@ Gives the episodes of TV series a clean name with the titles from TMDB, instead 
 **Files to rename**: *Files of the folder and its sub-folders* (default) or *Only the files of the folder*, when the sub-folders already hold videos with the right names: those are not looked for on TMDB. The other steps still work on every video. A long list takes time (TMDB answers about two searches a second): the log says how far the search is, and Stop ends it at once.
 
 **Movies folder** / **TV series folder**: with the rename alone in the workflow, the files are taken from these folders and renamed where they are, without changing the Preferences (empty = the input folder of the Preferences). **Rename the copies on the server too**: a renamed file already uploaded to a remote server (with a wrong name in an earlier workflow) is renamed there too, in the right folder; the copy is found in the upload record or, for older uploads, by name and size in the Movies / Series folders of the server.
+
+With several series in the list, a box before each poster says whether it is renamed (all ticked at first), with **Select all** / **Deselect all**: a series not ticked keeps its names.
 
 **Series matched by themselves**: a series not matched yet is searched at the start; when one series has exactly that name it is taken, and with series of the same name the titles of the episodes in the file names decide (`MobLand.S02E10.The.Queen.is.Dead`). Files with only the title are searched with the name of their folder and checked with their titles. The ones found are green, *Matched by itself on TMDB*; the others are searched with **Search TMDB...** as before.
 
