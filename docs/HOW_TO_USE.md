@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.89.16**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.89.22**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -159,6 +159,8 @@ samples) once no video is left in it; the input folder itself always stays. Two 
 same name in different sub-folders stop the start, because their finished files would have the
 same name.
 
+Every input folder (single folder, Movies, TV Series, automatic recognition, and the watched folder) has the box **Read the sub-folders too** (on by default): off, only the videos right in that folder are read, and its sub-folders are left alone by the whole workflow.
+
 ### Watched folder
 
 **Preferences → Watched folder** processes by themselves the new videos of a folder, for example the *Extract to* folder of JDownloader. Tick **Watching on**, choose the folder and the workflow (**Open preset...** uses a saved preset: what you save in it later is used from the next round; **Edit workflow...** makes a copy of it that no longer follows the preset, as in the queues), and how many minutes the folder must stay without changes.
@@ -167,7 +169,7 @@ same name.
 - **How**: the videos run as a queue with that workflow, movies and episodes recognised from the names, in the output folders of **Folders**. A video is never processed twice: the program remembers the files done (a file that changes counts as new). A video that would ask a choice before the start (tracks without language, audio in another language, a disc) or that failed waits in **Tools → Videos waiting**: open it in the Queue to start it with the usual windows, try it again at the next round, or ignore it.
 - **Queues**: tick **Watch the folders of this queue** in a queue to watch its folders with its own workflow and output; its folders are saved with it and it comes back at the next start.
 - **Safety**: no round starts while you run a workflow or a queue; before a round the work and output folders need free space for twice the biggest new video, otherwise the videos wait and a message says so (also on Telegram, when on). *When done* (sleep, shut down) is not used by the rounds.
-- **Next to the clock**: with the watching on, closing the window leaves the program next to the clock, still watching (right click → **Quit** to close it). The status bar says what the watching is doing.
+- **Next to the clock**: with the watching on, closing the window leaves the program next to the clock, still watching (right click → **Quit** to close it). The status bar says what the watching is doing. The notifications on screen of the rounds (bottom right) can be turned off with **Show the notifications of the rounds on screen (bottom right)**.
 
 ---
 
@@ -789,7 +791,7 @@ not converted again.
 | Bit depth | 8 or 10 bit. |
 | Deinterlace | **Automatic** (default), Off or Always. See [Picture: deinterlace, black bars, grain](#picture-deinterlace-black-bars-grain) below. |
 | 3D → 2D | **Automatic** (default), Off, or always side by side / top and bottom: a 3D video becomes 2D. See [Picture](#picture-deinterlace-black-bars-grain). |
-| Crop the black bars | Off by default. Removes the black bars of the picture (see below). |
+| Crop the black bars at the sides / Crop the black bars above and below | Off by default. Removes the black bars of the picture (see below). |
 | Maximum resolution | **Same as source** (default), 2160p, 1440p, 1080p, 720p, 576p or 480p. See below. |
 | Picture grain reduction | Off (default), Light, Medium or Strong (see below). |
 | Sharpening | Off (default), Light, Medium or Strong (see below). |
@@ -833,13 +835,13 @@ over the film) and prepares the picture. The log says what it found for every vi
     at 23.976 fps: `Deinterlace: telecine (NTSC film, 40% repeated fields)`.
 
   *Always* deinterlaces every frame; *Off* never touches the picture.
-- **Crop the black bars** (off by default). Removes the black bars above and below, or at the
+- **Crop the black bars at the sides** / **Crop the black bars above and below** (off by default). Removes the black bars above and below, or at the
   sides: the file is smaller and the encode faster at the same quality, but the size changes, for
   example `Black bars: 1920x1080 -> 1920x800`. Only what is black in **every** piece checked is
   removed, so a dark scene never loses picture; if the cut would remove more than half of the
   picture (a very dark video), nothing is cut. With the hardsub of an **image** subtitle
   (Blu-ray, DVD) the bars are kept, because those subtitles may sit in them; a burned SRT or ASS
-  is drawn inside the cropped picture.
+  is drawn inside the cropped picture. The two boxes are separate: many players and TVs stretch a picture cut above and below to fill a 16:9 screen (taller, thinner people), so the bars at the sides can be removed alone.
 - **Picture grain reduction** (off by default): removes the grain and noise of old videos (DVD, VHS), so
   the bits go to the picture, not to the noise. *Light* for good DVDs, *Medium* for grainy ones,
   *Strong* only for badly damaged sources, because it also removes fine detail. The same levels
@@ -1099,13 +1101,15 @@ Gives the episodes of TV series a clean name with the titles from TMDB, instead 
 
 With several series in the list, a box before each poster says whether it is renamed (all ticked at first), with **Select all** / **Deselect all**: a series not ticked keeps its names.
 
+The movies too have a row each (up to 30; with more, only how many), with the poster and the title found on TMDB or *Not found for sure*; **Search TMDB...** chooses the right one by hand, and the box before the poster decides whether it is renamed.
+
 **Series matched by themselves**: a series not matched yet is searched at the start; when one series has exactly that name it is taken, and with series of the same name the titles of the episodes in the file names decide (`MobLand.S02E10.The.Queen.is.Dead`). Files with only the title are searched with the name of their folder and checked with their titles. The ones found are green, *Matched by itself on TMDB*; the others are searched with **Search TMDB...** as before.
 
 **Title from the file name**: when TMDB has no title of an episode in the language, the title written in the file name is used (`La.cicogna.S01E01.Arriva.il.bambino` → *Arriva il bambino*), with accents and apostrophes put back from the word list of the language (`Perche.la.citta` → *Perché la città*, `Cera.una.volta` → *C'era una volta*); only then the choice of **Titles missing in the language**. These names are orange in the preview.
 
-**More tokens**, for movies and episodes: from the original name `{source}` (WEB-DL, BluRay...), `{release_info}` (the whole technical part) and `{group}`; from the finished file, read when it is renamed and so always right after an encode, `{resolution}`, `{vcodec}`, `{audio}`, `{languages}`, `{hdr}`. **Character instead of the spaces** (empty by default): with a dot, `The Expanse - S01E05 - Title` becomes `The.Expanse.S01E05.Title`.
+**More tokens**, for movies and episodes: from the original name `{source}` (WEB-DL, BluRay...), `{release_info}` (the whole technical part) and `{group}`; from the finished file, read when it is renamed and so always right after an encode, `{resolution}`, `{vcodec}`, `{audio}`, `{languages}`, `{hdr}`. **Character instead of the spaces** (empty by default): with a dot, `The Expanse - S01E05 - Title` becomes `The.Expanse.S01E05.Title`. There is one for the movies (Movies box) and one for the episodes (TV series box).
 
-**Names to check** (Tools menu, and by itself at the end of a workflow that left some): the movies and episodes not found for sure keep their names and are listed here, with the candidates of TMDB; **Search TMDB...** finds another one. **Use this one** renames the final file, the original (unless in seed) and the copies uploaded to the servers, also into the folder of the new name (a folder per movie); a server that does not answer keeps the entry for a later try. For a word right with and without the accent (*e* / *è*, *si* / *sì*) in a title from a file name, the program asks DeepL (with your key) or the translation model on the PC, on the CPU, and takes the answer only when it has the same letters.
+**Names to check** (Tools menu, and by itself at the end of a workflow that left some): the movies and episodes not found for sure keep their names and are listed here, with the candidates of TMDB; **Search TMDB...** finds another one. **Use this one** renames the final file, the original (unless in seed) and the copies uploaded to the servers, also into the folder of the new name (a folder per movie); a server that does not answer keeps the entry for a later try. For a word right with and without the accent (*e* / *è*, *si* / *sì*) in a title from a file name, the program asks DeepL (with your key) or the translation model on the PC, on the CPU, and takes the answer only when it has the same letters. An episode of a known series that TMDB does not have (a broadcast that splits the episodes differently) is named all the same, with the series from TMDB and the title of the file (or "Episode 81"), and it waits here too.
 
 **Files with only the title** (`Tabula rasa.mkv`, without `S01E01`): the files of one folder make one group, named after the folder. Once the series is chosen with **Search TMDB...**, season and episode of every file are found from its title, compared with the titles of every season (in the language of the titles, the fallback one and English; capitals, accents, apostrophes and technical words such as `1080p` do not count). A file with two titles in a row is a double episode (`S04E01-E02`). A title not found, or close to two episodes, is not renamed (red in the preview), and the preview lists at the bottom the episodes of those seasons that have no file. The folder is not remembered (the next files put in it can be another series), but the series is remembered under its TMDB names: a later season with the name in the files (`I.Woke.Up.A.Vampire.S03E01`) is matched by itself. With another order chosen in **Numbering** (for example *Netflix Seasons*), the titles are looked for in that order and the files take its numbering (the first episode of the second Netflix season becomes `S02E01`). A name that starts with the numbers of the episodes without the season (`10-11 Title`, or `18 - Title` after **Split multi-episode file**) is matched by those numbers and its title: the season where those episodes have a title that starts with it (`10-11 The Day of Black Sun` → `S03E10-E11`).
 
