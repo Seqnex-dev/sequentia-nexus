@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.89.22**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.90.1**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -1181,6 +1181,16 @@ Puts the audio and the subtitles of one version of a film (the **source**: a DVD
 - The source and target videos are never deleted. Only discs without protection are read.
 
 ---
+
+#### Automatic chapters
+
+Adds chapters to skip the opening theme and the end credits, Netflix style: players show them, and some skip them by themselves. The chapters are written in the file without re-encoding: after **Merge** or **Encode video** it works on the finished files, alone it makes MKV copies.
+
+- **TV series**: the opening theme and the end credits are found by comparing each episode with the other episodes of the same series (the same sound at the start and at the end); the chapters are *Before the intro* (when the theme is not at the start), *Intro*, *Episode*, *Credits*.
+- **Movies**: the start of the movie and the end credits, found from the picture (black frames with white or grey text up to the end).
+- Every chapter has a name in the language of the audio and one in English (*Intro*, *Credits*), the names some players and skip-intro tools look for. They are standard Matroska chapters: Kodi, VLC, mpv, Infuse, Jellyfin, Plex, Emby and TV players read them; an IPTV panel that re-encodes to HLS / TS loses them.
+- **Chapters already in the file**: kept with the new ones added (those a few seconds from a new chapter go), or replaced.
+- The files it is not sure about (the theme found in one other episode only, credits not found, a pilot without the theme, the movies for now) go to **Chapters to check** (Tools menu, and by itself at the end of the workflow): for each chapter three frames around it, the time to move, chapters to add or remove, **Save chapters**.
 
 ## 7. Subtitles in depth
 
