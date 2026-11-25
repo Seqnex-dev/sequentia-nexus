@@ -1,6 +1,6 @@
 # How to use Sequentia Nexus
 
-This guide covers version **0.90.1**. Sequentia Nexus is in beta: some parts may still change.
+This guide covers version **0.91.8**. Sequentia Nexus is in beta: some parts may still change.
 
 **Contents**
 
@@ -169,7 +169,7 @@ Every input folder (single folder, Movies, TV Series, automatic recognition, and
 - **How**: the videos run as a queue with that workflow, movies and episodes recognised from the names, in the output folders of **Folders**. A video is never processed twice: the program remembers the files done (a file that changes counts as new). A video that would ask a choice before the start (tracks without language, audio in another language, a disc) or that failed waits in **Tools → Videos waiting**: open it in the Queue to start it with the usual windows, try it again at the next round, or ignore it.
 - **Queues**: tick **Watch the folders of this queue** in a queue to watch its folders with its own workflow and output; its folders are saved with it and it comes back at the next start.
 - **Safety**: no round starts while you run a workflow or a queue; before a round the work and output folders need free space for twice the biggest new video, otherwise the videos wait and a message says so (also on Telegram, when on). *When done* (sleep, shut down) is not used by the rounds.
-- **Next to the clock**: with the watching on, closing the window leaves the program next to the clock, still watching (right click → **Quit** to close it). The status bar says what the watching is doing. The notifications on screen of the rounds (bottom right) can be turned off with **Show the notifications of the rounds on screen (bottom right)**.
+- **Next to the clock**: with the watching on, closing the window leaves the program next to the clock, still watching (right click → **Quit** to close it). The status bar says what the watching is doing. With videos waiting or failed (not taken again by themselves) it also says how many, for example *nothing new · 1 video waiting*. The notifications on screen of the rounds (bottom right) can be turned off with **Show the notifications of the rounds on screen (bottom right)**.
 
 ---
 
@@ -1095,13 +1095,13 @@ Gives the episodes of TV series a clean name with the titles from TMDB, instead 
 
 **Movies** (**Rename**: *Movies and TV series* (default), *Only the movies* or *Only the TV series*): title and year come from the file name (`Profumo.di.bergamotto.2026.WebDL.1080p...`, `Film (Director, 1953) VHSRip`) or from the folder of the download, and the movie is found by itself on TMDB; when two movies are alike, the runtime of the file decides. **Name template of the movies**: `{title}`, `{year}`, `{original_title}`; a `/` makes a folder per movie (`{title} ({year})/{title} ({year})`). A movie not found for sure keeps its name, and the log says which movies came closest.
 
-**Files to rename**: *Files of the folder and its sub-folders* (default) or *Only the files of the folder*, when the sub-folders already hold videos with the right names: those are not looked for on TMDB. The other steps still work on every video. A long list takes time (TMDB answers about two searches a second): the log says how far the search is, and Stop ends it at once.
+**Files to rename**: *Files of the folder and its sub-folders* (default) or *Only the files of the folder*, when the sub-folders already hold videos with the right names: those are not looked for on TMDB. The other steps still work on every video. A long list takes time (TMDB answers about two searches a second): the log says how far the search is, and Stop ends it at once. With *Only the files of the folder* the check before the start and the log say which videos of the sub-folders are left out (a watched download folder keeps them in sub-folders: use the other choice there).
 
-**Movies folder** / **TV series folder**: with the rename alone in the workflow, the files are taken from these folders and renamed where they are, without changing the Preferences (empty = the input folder of the Preferences). **Rename the copies on the server too**: a renamed file already uploaded to a remote server (with a wrong name in an earlier workflow) is renamed there too, in the right folder; the copy is found in the upload record or, for older uploads, by name and size in the Movies / Series folders of the server.
+**Movies folder** / **TV series folder**: with the rename alone in the workflow, the files are taken from these folders and renamed where they are, without changing the Preferences (empty = the input folder of the Preferences). In a queue these two fields are not shown: the files of the queue are renamed (add them in the queue box). **Rename the copies on the server too**: a renamed file already uploaded to a remote server (with a wrong name in an earlier workflow) is renamed there too, in the right folder; the copy is found in the upload record or, for older uploads, by name and size in the Movies / Series folders of the server.
 
 With several series in the list, a box before each poster says whether it is renamed (all ticked at first), with **Select all** / **Deselect all**: a series not ticked keeps its names.
 
-The movies too have a row each (up to 30; with more, only how many), with the poster and the title found on TMDB or *Not found for sure*; **Search TMDB...** chooses the right one by hand, and the box before the poster decides whether it is renamed.
+The movies too have a row each (up to 30; with more, only how many), with the poster and the title found on TMDB or *Not found for sure*; **Search TMDB...** chooses the right one by hand, and the box before the poster decides whether it is renamed. When the whole name finds nothing (two titles together, "October Gale Una notte nella tempesta"), the search tries its first words, then its last ones, and says which part it used.
 
 **Series matched by themselves**: a series not matched yet is searched at the start; when one series has exactly that name it is taken, and with series of the same name the titles of the episodes in the file names decide (`MobLand.S02E10.The.Queen.is.Dead`). Files with only the title are searched with the name of their folder and checked with their titles. The ones found are green, *Matched by itself on TMDB*; the others are searched with **Search TMDB...** as before.
 
@@ -1186,11 +1186,11 @@ Puts the audio and the subtitles of one version of a film (the **source**: a DVD
 
 Adds chapters to skip the opening theme and the end credits, Netflix style: players show them, and some skip them by themselves. The chapters are written in the file without re-encoding: after **Merge** or **Encode video** it works on the finished files, alone it makes MKV copies.
 
-- **TV series**: the opening theme and the end credits are found by comparing each episode with the other episodes of the same series (the same sound at the start and at the end); the chapters are *Before the intro* (when the theme is not at the start), *Intro*, *Episode*, *Credits*.
+- **TV series**: the opening theme and the end credits are found by comparing each episode with the other episodes of the same series (the same sound at the start and at the end); the chapters are *Before the intro* (when the theme is not at the start), *Intro*, *Episode*, *Credits*. The end credits come first from the picture: a cut or a fade from the picture to a clean black with the cards, on the exact frame; the music only where there is no such passage. The episodes already finished in the output folder are compared too (a watched folder brings a season a few episodes at a time). An opening theme that starts with a cut to black starts on the first black frame too, and the episodes already renamed (with "_" in place of ":") count as the same series. The opening theme is looked for in the first 15 minutes of the episode.
 - **Movies**: the start of the movie and the end credits, found from the picture (black frames with white or grey text up to the end).
 - Every chapter has a name in the language of the audio and one in English (*Intro*, *Credits*), the names some players and skip-intro tools look for. They are standard Matroska chapters: Kodi, VLC, mpv, Infuse, Jellyfin, Plex, Emby and TV players read them; an IPTV panel that re-encodes to HLS / TS loses them.
 - **Chapters already in the file**: kept with the new ones added (those a few seconds from a new chapter go), or replaced.
-- The files it is not sure about (the theme found in one other episode only, credits not found, a pilot without the theme, the movies for now) go to **Chapters to check** (Tools menu, and by itself at the end of the workflow): for each chapter three frames around it, the time to move, chapters to add or remove, **Save chapters**.
+- The files it is not sure about (the theme found in one other episode only, credits not found, a pilot without the theme, a movie whose credits are not on a clean black) go to **Chapters to check** (Tools menu, and by itself at the end of the workflow): for the opening theme and the end credits you mark two frames each, **Start** (the first frame of the theme or of the credits) and **End** (the first frame after it, where the episode starts again; empty for credits that go to the end of the file), moving through the video with the buttons (10 s, 1 s, one frame) or by clicking the bar of the file, with **Here** to take the position and **Go** to look at a point; the chapters that will be written are shown in words, and **Save chapters** writes them in the file, without re-encoding. Once you save the chapters of an episode, the same opening theme and end credits are looked for in the other episodes of the same series and season in the list, from the sound and checked on the pictures: where they match the chapters are written by themselves, the others stay in the list with the points already proposed (another season is never touched). With **Add folder...** and **Add files...** you can also put MKV files there yourself (a whole season, for example), to give them their chapters this way: the chapters already in a file stay, except the ones near the new points. The **Play** button (or the Space key) plays the file from the position with its sound, to hear where the theme or the credits begin; **Pause** stops it there, and the position is the moment you heard.
 
 ## 7. Subtitles in depth
 
@@ -1299,7 +1299,7 @@ file per card, on the CPU without NVIDIA cards) while the step goes on with the 
 the length of its audio tracks and of its video is compared with the original. The log says
 `[Check] Episode.mkv: decodes without errors, tracks complete (92 s)`. A damaged file (decoding
 errors, an audio track that ends before the video when it did not in the original, a video
-shorter than the original's) is renamed `<name>.damaged.mkv`: it goes to the output folder so
+shorter than the original's, a picture of one colour or that never changes while the original's moves) is renamed `<name>.damaged.mkv`: it goes to the output folder so
 you can look at it, it is not uploaded, and its original counts as not completed, so it is kept.
 Errors that the original has too (a merge copies the video as it is) are only a warning. A
 54-minute 1080p episode takes about 90 seconds, almost all while the next one is encoded.
